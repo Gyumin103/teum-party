@@ -19,7 +19,10 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;}
 .st-dot{width:28px;height:28px;border-radius:50%;border:1.5px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all 0.25s;color:#777;}
 .st.on .st-dot{background:#e91e8c;border-color:#e91e8c;color:#fff;}
 .st.done .st-dot{background:#fce4ec;border-color:#e91e8c;color:#e91e8c;font-size:12px;}
-.st-line{flex:1;height:1.5px;background:#eee;transition:background 0.3s;}
+.st-line{flex:1;height:1.5px;background:#eee;transition:background 0.3s;margin-bottom:16px;}
+.st-label{font-size:10px;color:#bbb;margin-top:5px;text-align:center;white-space:nowrap;}
+.st.on .st-label{color:#e91e8c;font-weight:700;}
+.st.done .st-label{color:#e91e8c;}
 .st-line.done{background:#e91e8c;}
 .step{display:none;flex-direction:column;gap:1.1rem;animation:fadeUp 0.25s ease;}
 .step.active{display:flex;}
@@ -79,16 +82,15 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;}
   </div>
 
   <div class="step-track">
-    <div class="st on" id="st0"><div class="st-dot">1</div></div>
+    <div class="st on" id="st0"><div class="st-dot">1</div><div class="st-label">기본 정보</div></div>
     <div class="st-line" id="sl0"></div>
-    <div class="st" id="st1"><div class="st-dot">2</div></div>
+    <div class="st" id="st1"><div class="st-dot">2</div><div class="st-label">상세 정보</div></div>
     <div class="st-line" id="sl1"></div>
-    <div class="st" id="st2"><div class="st-dot">3</div></div>
+    <div class="st" id="st2"><div class="st-dot">3</div><div class="st-label">내용 확인</div></div>
   </div>
 
   <!-- STEP 1: 기본 정보 -->
   <div class="step active" id="s0">
-    <div class="section-label">기본 정보</div>
     <div class="field">
       <label>이름 <span class="req">*</span></label>
       <input id="name" type="text" placeholder="실명으로 꼭 작성해 주세요"/>
@@ -136,7 +138,6 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;}
 
   <!-- STEP 2: 성격 & MBTI -->
   <div class="step" id="s1">
-    <div class="section-label">성격 & MBTI</div>
     <div class="field">
       <label>닮은꼴 연예인 <span style="color:#aaa;font-size:11px;">(선택)</span></label>
       <input id="look" type="text" placeholder="예) 아이유, 차은우..."/>
@@ -159,7 +160,6 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;}
 
   <!-- STEP 3: 내용 확인 -->
   <div class="step" id="s2">
-    <div class="section-label">내용 확인</div>
     <div class="hint" style="font-size:12px;">내용을 확인하고 문제 없으면 신청을 완료해 주세요</div>
     <div class="preview-card" id="preview"></div>
     <button class="btn-next" onclick="submitForm()">💌 신청 완료하기</button>
