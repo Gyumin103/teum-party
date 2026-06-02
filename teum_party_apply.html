@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>2026 외모승인 틈파티 신청서</title>
+<link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;}
+  .wrap{max-width:480px;margin:0 auto;padding:0 1.25rem 3rem;}
+
+  .hero{padding:2rem 0 1.5rem;text-align:center;}
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:0.08em;padding:5px 14px;border-radius:999px;background:#fff0f5;color:#c2185b;border:1px solid #f8bbd0;margin-bottom:14px;}
+  .hero h1{font-size:27px;font-weight:700;line-height:1.4;color:#1a1a1a;}
+  .hero h1 em{font-style:normal;color:#e91e8c;}
+  .hero p{font-size:13px;color:#555;margin-top:8px;line-height:1.9;}
+
+  /* step track */
+  .step-track{display:flex;align-items:center;margin:0 0 1.75rem;}
+  .st{display:flex;flex-direction:column;align-items:center;flex:1;}
+  .st-dot{width:28px;height:28px;border-radius:50%;border:1.5px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all 0.25s;color:#777;}
+  .st.on .st-dot{background:#e91e8c;border-color:#e91e8c;color:#fff;}
+  .st.done .st-dot{background:#fce4ec;border-color:#e91e8c;color:#e91e8c;font-size:12px;}
+  .st-line{flex:1;height:1.5px;background:#eee;transition:background 0.3s;}
+  .st-line.done{background:#e91e8c;}
+
+  /* steps */
+  .step{display:none;flex-direction:column;gap:1.1rem;animation:fadeUp 0.25s ease;}
+  .step.active{display:flex;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  .section-label{font-size:12px;font-weight:700;letter-spacing:0.08em;color:#e91e8c;}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  .field label{font-size:13px;color:#444;}
+  .req{color:#e91e8c;}
+  .field input{height:48px;border-radius:12px;border:1.5px solid #e0e0e0;padding:0 14px;font-size:15px;color:#111;background:#fff;width:100%;outline:none;font-family:'Gmarket Sans',sans-serif;transition:border-color 0.15s,box-shadow 0.15s;}
+  .field input:focus{border-color:#e91e8c;box-shadow:0 0 0 3px rgba(233,30,140,0.08);}
+  .field input::placeholder{color:#777;}
+  .select-wrap{position:relative;}
+  .select-wrap select{height:48px;border-radius:12px;border:1.5px solid #e0e0e0;padding:0 14px;font-size:15px;color:#111;background:#fff;width:100%;outline:none;font-family:'Gmarket Sans',sans-serif;transition:border-color 0.15s,box-shadow 0.15s;appearance:none;-webkit-appearance:none;cursor:pointer;}
+  .select-wrap select:focus{border-color:#e91e8c;box-shadow:0 0 0 3px rgba(233,30,140,0.08);}
+  .select-wrap::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:14px;color:#777;pointer-events:none;}
+  .hint{font-size:11px;color:#888;line-height:1.6;}
+  .hint.pink{color:#e91e8c;font-weight:700;}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+  /* photo */
+  .photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .photo-box{border:1.5px dashed #ddd;border-radius:14px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden;background:#fafafa;}
+  .photo-box:hover{border-color:#e91e8c;background:#fff0f8;}
+  .photo-box.filled{border-style:solid;border-color:#e91e8c;}
+  .photo-box img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px;}
+  .photo-box .overlay{position:absolute;inset:0;background:rgba(233,30,140,0.5);display:flex;align-items:center;justify-content:center;border-radius:12px;opacity:0;transition:opacity 0.15s;color:#fff;font-size:13px;font-weight:700;}
+  .photo-box:hover .overlay{opacity:1;}
+  .photo-box .plabel{font-size:13px;color:#333;font-weight:700;position:relative;z-index:1;}
+  .photo-box .picon{font-size:30px;position:relative;z-index:1;}
+  .photo-box .psub{font-size:11px;color:#888;position:relative;z-index:1;}
+  .photo-check{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:#e91e8c;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;z-index:2;}
+
+  /* tags */
+  .tags-grid{display:flex;flex-wrap:wrap;gap:8px;}
+  .tag-btn{
+    padding:9px 16px;border-radius:10px;
+    border:1.5px solid #e0e0e0;
+    background:#fff;
+    font-size:13px;font-weight:500;cursor:pointer;
+    color:#444;
+    font-family:'Gmarket Sans',sans-serif;
+    transition:all 0.18s;
+  }
+  .tag-btn:hover{border-color:#f48fb1;color:#c2185b;}
+  .tag-btn.selected{
+    border-color:#e91e8c;
+    background:#e91e8c;
+    color:#fff;
+    font-weight:700;
+  }
+  .tag-count{font-size:11px;color:#888;margin-top:4px;}
+  .other-input{height:44px;border-radius:10px;border:1.5px solid #e0e0e0;padding:0 12px;font-size:14px;color:#1a1a1a;background:#fff;width:100%;outline:none;font-family:'Gmarket Sans',sans-serif;margin-top:6px;display:none;transition:border-color 0.15s;}
+  .other-input.show{display:block;}
+  .other-input:focus{border-color:#e91e8c;}
+
+  /* mbti */
+  .mbti-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .mbti-btn{
+    height:48px;border-radius:10px;
+    border:1.5px solid #e0e0e0;
+    background:#fff;
+    font-size:13px;font-weight:700;cursor:pointer;
+    color:#444;
+    font-family:'Gmarket Sans',sans-serif;
+    transition:all 0.18s;letter-spacing:0.02em;
+  }
+  .mbti-btn:hover{border-color:#f48fb1;color:#c2185b;}
+  .mbti-btn.selected{
+    border-color:#e91e8c;
+    background:#e91e8c;
+    color:#fff;
+  }
+
+  /* buttons */
+  .btn-next{width:100%;height:52px;border-radius:12px;border:none;background:#e91e8c;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;transition:opacity 0.15s,transform 0.1s;letter-spacing:0.02em;margin-top:0.25rem;}
+  .btn-next:hover{opacity:0.9;}
+  .btn-next:active{transform:scale(0.98);}
+  .btn-back{background:none;border:1.5px solid #e0e0e0;color:#777;width:100%;height:44px;border-radius:12px;font-size:14px;cursor:pointer;font-family:'Gmarket Sans',sans-serif;transition:all 0.15s;}
+  .btn-back:hover{border-color:#777;color:#444;}
+
+  /* preview */
+  .preview-card{background:#fafafa;border-radius:14px;padding:1rem 1.25rem;border:1px solid #eee;}
+  .preview-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid #eee;font-size:13px;}
+  .preview-row:last-child{border-bottom:none;}
+  .preview-key{color:#777;flex-shrink:0;}
+  .preview-val{color:#1a1a1a;font-weight:500;text-align:right;max-width:65%;}
+
+  /* success */
+  .success-wrap{text-align:center;padding:2rem 0;animation:fadeUp 0.4s ease;}
+  .confetti-row{font-size:30px;letter-spacing:4px;margin-bottom:16px;}
+  .success-badge{display:inline-block;padding:10px 24px;border-radius:999px;background:#fff0f8;border:1.5px solid #f48fb1;color:#c2185b;font-size:14px;font-weight:700;margin-bottom:16px;}
+  .success-wrap h2{font-size:22px;font-weight:700;color:#1a1a1a;}
+  .success-wrap p{font-size:13px;color:#555;margin-top:8px;line-height:1.9;}
+  .success-id{display:inline-block;margin-top:16px;font-size:12px;color:#777;background:#f5f5f5;padding:6px 14px;border-radius:8px;}
+
+  .err{font-size:11px;color:#e91e8c;display:none;margin-top:2px;}
+  .err.show{display:block;}
+  .info-box{font-size:12px;line-height:1.8;padding:10px 12px;background:#fafafa;border-radius:10px;border:0.5px solid #eee;color:#555;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-eyebrow">✨ 2026 외모승인 틈파티</div>
+    <h1>외모로 승인받는<br><em>그 설레는 틈</em> 🩷</h1>
+    <p>딱 1분이면 신청 끝!<br>당신의 외모, 지금 바로 승인해드릴게요 😏</p>
+  </div>
+
+  <div class="step-track">
+    <div class="st on" id="st0"><div class="st-dot">1</div></div>
+    <div class="st-line" id="sl0"></div>
+    <div class="st" id="st1"><div class="st-dot">2</div></div>
+    <div class="st-line" id="sl1"></div>
+    <div class="st" id="st2"><div class="st-dot">3</div></div>
+    <div class="st-line" id="sl2"></div>
+    <div class="st" id="st3"><div class="st-dot">4</div></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step active" id="s0">
+    <div class="section-label">기본 정보</div>
+    <div class="field">
+      <label>이름 <span class="req">*</span></label>
+      <input id="name" type="text" placeholder="실명으로 꼭 작성해 주세요"/>
+      <span class="hint">닉네임 사용 시 신청이 취소될 수 있어요</span>
+      <span class="err" id="err-name">실명을 입력해 주세요</span>
+    </div>
+    <div class="row3">
+      <div class="field">
+        <label>성별 <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="gender-sel"><option value="">선택</option><option value="남">남성</option><option value="여">여성</option></select>
+        </div>
+        <span class="err" id="err-gender">선택해 주세요</span>
+      </div>
+      <div class="field">
+        <label>태어난 연도 <span class="req">*</span></label>
+        <div class="select-wrap"><select id="year"><option value="">선택</option></select></div>
+        <span class="err" id="err-year">선택해 주세요</span>
+      </div>
+      <div class="field">
+        <label>키 <span class="req">*</span></label>
+        <div class="select-wrap"><select id="height"><option value="">선택</option></select></div>
+        <span class="err" id="err-height">선택해 주세요</span>
+      </div>
+    </div>
+    <div class="field">
+      <label>직업 <span class="req">*</span></label>
+      <input id="job" type="text" placeholder="예) 개발자, 간호사, 대학원생..."/>
+      <span class="err" id="err-job">직업을 입력해 주세요</span>
+    </div>
+    <div class="field">
+      <label>연락처 <span class="req">*</span></label>
+      <input id="phone" type="tel" placeholder="010-0000-0000"/>
+      <span class="hint">🔒 운영자에게만 공개돼요</span>
+      <span class="err" id="err-phone">연락처를 입력해 주세요</span>
+    </div>
+    <div class="field">
+      <label>인스타그램 계정</label>
+      <input id="insta" type="text" placeholder="@아이디"/>
+      <span class="hint pink">✨ 인스타 계정이 있으면 승인 확률이 높아져요!</span>
+    </div>
+    <button class="btn-next" onclick="next(0)">다음 →</button>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step" id="s1">
+    <div class="section-label">성격 & MBTI</div>
+    <div class="field">
+      <label>닮은꼴 연예인 <span style="color:#777;font-size:11px;">(선택)</span></label>
+      <input id="look" type="text" placeholder="예) 아이유, 차은우..."/>
+    </div>
+    <div class="field">
+      <label>나를 표현하는 해시태그 <span class="req">*</span> <span style="color:#777;font-size:11px;">최대 3개</span></label>
+      <div class="tags-grid" id="tags-grid"></div>
+      <input class="other-input" id="other-tag-input" placeholder="직접 입력 (예: #내향적)"/>
+      <div class="tag-count" id="tag-count">0 / 3개 선택</div>
+      <span class="err" id="err-tags">해시태그를 1개 이상 선택해 주세요</span>
+    </div>
+    <div class="field">
+      <label>MBTI <span class="req">*</span></label>
+      <div class="mbti-grid" id="mbti-grid"></div>
+      <span class="err" id="err-mbti">MBTI를 선택해 주세요</span>
+    </div>
+    <button class="btn-next" onclick="next(1)">다음 →</button>
+    <button class="btn-back" onclick="back(1)">← 이전</button>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step" id="s2">
+    <div class="section-label">사진 등록</div>
+    <div class="info-box">📸 최근 6개월 이내 사진으로 등록해 주세요<br>사진 2장 모두 등록해야 다음으로 넘어갈 수 있어요</div>
+    <div class="photo-grid">
+      <div>
+        <div class="photo-box" id="box-face" onclick="triggerUpload('face')">
+          <div class="picon">🤳</div>
+          <div class="plabel">얼굴 사진</div>
+          <div class="psub">클릭해서 등록</div>
+          <div class="overlay">변경하기</div>
+        </div>
+        <input type="file" id="inp-face" accept="image/*" style="display:none" onchange="previewPhoto('face',this)"/>
+      </div>
+      <div>
+        <div class="photo-box" id="box-body" onclick="triggerUpload('body')">
+          <div class="picon">🧍</div>
+          <div class="plabel">전신 사진</div>
+          <div class="psub">클릭해서 등록</div>
+          <div class="overlay">변경하기</div>
+        </div>
+        <input type="file" id="inp-body" accept="image/*" style="display:none" onchange="previewPhoto('body',this)"/>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center;">
+      <div style="font-size:12px;color:#888;" id="status-face">⬜ 미등록</div>
+      <div style="font-size:12px;color:#888;" id="status-body">⬜ 미등록</div>
+    </div>
+    <span class="err" id="err-photo">사진 2장을 모두 등록해 주세요</span>
+    <button class="btn-next" onclick="next(2)">다음 →</button>
+    <button class="btn-back" onclick="back(2)">← 이전</button>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step" id="s3">
+    <div class="section-label">내용 확인</div>
+    <div class="hint">내용을 확인하고 문제 없으면 신청을 완료해 주세요</div>
+    <div class="preview-card" id="preview"></div>
+    <button class="btn-next" onclick="submit()">💌 신청 완료하기</button>
+    <button class="btn-back" onclick="back(3)">← 이전</button>
+  </div>
+
+  <!-- 완료 -->
+  <div class="step" id="s-done">
+    <div class="success-wrap">
+      <div class="confetti-row">🎉🩷🎊</div>
+      <div class="success-badge">외모 승인 완료 ✅</div>
+      <h2>틈파티에서<br>만나요 🩷</h2>
+      <p>운영자가 검토 후<br>인스타 또는 문자로 연락드릴게요 💌</p>
+      <div class="success-id" id="apply-id"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedTags=[], selectedMbti='';
+let photos={face:false,body:false};
+const tagOptions=['#다정함','#섹시함','#착함','#유머있음','#차분함','#활발함','#지적임','#츤데레','#엉뚱함','#감성적','#도도함','#귀여움','#털털함','#듬직함','#솔직함','#쿨함','#기타'];
+const mbtiList=['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'];
+
+(function(){
+  const ySel=document.getElementById('year');
+  for(let y=2007;y>=1992;y--){const o=document.createElement('option');o.value=y;o.textContent=y+'년';ySel.appendChild(o);}
+  const hSel=document.getElementById('height');
+  for(let h=150;h<=190;h++){const o=document.createElement('option');o.value=h;o.textContent=h+'cm';hSel.appendChild(o);}
+})();
+
+document.getElementById('tags-grid').innerHTML=tagOptions.map(t=>`<button class="tag-btn" onclick="toggleTag(this,'${t}')">${t}</button>`).join('');
+document.getElementById('mbti-grid').innerHTML=mbtiList.map(m=>`<button class="mbti-btn" onclick="selectMbti(this,'${m}')">${m}</button>`).join('');
+
+function triggerUpload(t){document.getElementById('inp-'+t).click();}
+function previewPhoto(type,inp){
+  if(!inp.files||!inp.files[0])return;
+  const url=URL.createObjectURL(inp.files[0]);
+  const box=document.getElementById('box-'+type);
+  box.innerHTML=`<img src="${url}"/><div class="photo-check">✓</div><div class="overlay">변경하기</div>`;
+  box.classList.add('filled');
+  box.onclick=()=>triggerUpload(type);
+  photos[type]=true;
+  const st=document.getElementById('status-'+type);
+  st.textContent='✅ 등록 완료'; st.style.color='#e91e8c';
+}
+
+function toggleTag(el,tag){
+  if(tag==='#기타'){
+    const already=el.classList.contains('selected');
+    el.classList.toggle('selected');
+    const inp=document.getElementById('other-tag-input');
+    if(!already){inp.classList.add('show');inp.focus();}
+    else inp.classList.remove('show');
+    updateTagCount(); return;
+  }
+  if(el.classList.contains('selected')){
+    el.classList.remove('selected');
+    selectedTags=selectedTags.filter(t=>t!==tag);
+  } else {
+    const otherOn=document.getElementById('other-tag-input').classList.contains('show')?1:0;
+    if(selectedTags.length>=(3-otherOn)){alert('해시태그는 최대 3개까지 선택할 수 있어요');return;}
+    el.classList.add('selected'); selectedTags.push(tag);
+  }
+  updateTagCount();
+}
+function updateTagCount(){
+  const otherOn=document.getElementById('other-tag-input').classList.contains('show')?1:0;
+  document.getElementById('tag-count').textContent=(selectedTags.length+otherOn)+' / 3개 선택';
+}
+function selectMbti(el,m){
+  document.querySelectorAll('.mbti-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected'); selectedMbti=m;
+}
+
+function showErr(id,show){const el=document.getElementById(id);if(el)el.classList.toggle('show',show);}
+
+function setStep(n){
+  document.querySelectorAll('.step').forEach((s,i)=>s.classList.toggle('active',i===n));
+  [0,1,2,3].forEach(i=>{
+    const st=document.getElementById('st'+i);
+    st.classList.toggle('on',i===n);
+    st.classList.toggle('done',i<n);
+    st.querySelector('.st-dot').textContent=i<n?'✓':(i+1);
+  });
+  [0,1,2].forEach(i=>{const sl=document.getElementById('sl'+i);if(sl)sl.classList.toggle('done',i<n);});
+  if(n===3)updatePreview();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function next(cur){
+  if(cur===0){
+    const name=document.getElementById('name').value.trim();
+    const g=document.getElementById('gender-sel').value;
+    const yr=document.getElementById('year').value;
+    const h=document.getElementById('height').value;
+    const job=document.getElementById('job').value.trim();
+    const phone=document.getElementById('phone').value.trim();
+    let ok=true;
+    if(!name||name.length<2){showErr('err-name',true);ok=false;}else showErr('err-name',false);
+    if(!g){showErr('err-gender',true);ok=false;}else showErr('err-gender',false);
+    if(!yr){showErr('err-year',true);ok=false;}else showErr('err-year',false);
+    if(!h){showErr('err-height',true);ok=false;}else showErr('err-height',false);
+    if(!job){showErr('err-job',true);ok=false;}else showErr('err-job',false);
+    if(!phone||phone.length<9){showErr('err-phone',true);ok=false;}else showErr('err-phone',false);
+    if(!ok)return;
+  }
+  if(cur===1){
+    const otherOn=document.getElementById('other-tag-input').classList.contains('show');
+    const otherVal=document.getElementById('other-tag-input').value.trim();
+    const total=selectedTags.length+(otherOn&&otherVal?1:0);
+    if(total===0){showErr('err-tags',true);return;} showErr('err-tags',false);
+    if(!selectedMbti){showErr('err-mbti',true);return;} showErr('err-mbti',false);
+  }
+  if(cur===2){
+    if(!photos.face||!photos.body){showErr('err-photo',true);return;} showErr('err-photo',false);
+  }
+  setStep(cur+1);
+}
+function back(cur){setStep(cur-1);}
+
+function getKorAge(yr){return (2026-parseInt(yr)+1)+'살';}
+
+function updatePreview(){
+  const yr=document.getElementById('year').value;
+  const g=document.getElementById('gender-sel').value;
+  const otherOn=document.getElementById('other-tag-input').classList.contains('show');
+  const otherVal=document.getElementById('other-tag-input').value.trim();
+  let finalTags=[...selectedTags];
+  if(otherOn&&otherVal)finalTags.push(otherVal);
+  const rows=[
+    ['이름',document.getElementById('name').value||'—'],
+    ['성별',g?g+'성':'—'],
+    ['나이',yr?yr+'년생 ('+getKorAge(yr)+')':'—'],
+    ['키',(document.getElementById('height').value||'—')+'cm'],
+    ['직업',document.getElementById('job').value||'—'],
+    ['연락처',document.getElementById('phone').value||'—'],
+    ['인스타',document.getElementById('insta').value||'—'],
+    ['닮은꼴',document.getElementById('look').value||'—'],
+    ['성격',finalTags.join(' ')||'—'],
+    ['MBTI',selectedMbti||'—'],
+    ['사진','얼굴 + 전신 ✅'],
+  ];
+  document.getElementById('preview').innerHTML=rows.map(r=>`
+    <div class="preview-row"><span class="preview-key">${r[0]}</span><span class="preview-val">${r[1]}</span></div>
+  `).join('');
+}
+
+function submit(){
+  const id='TEUM'+Date.now().toString().slice(-6);
+  document.getElementById('apply-id').textContent='신청 번호 '+id;
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-done').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
