@@ -201,10 +201,10 @@ function renderCards(){
         </div>
         <div class="card-sub">${d['나이']||''} · ${d['키']||''} · ${d['직업']||''}</div>
         <div class="card-divider"></div>
-        <div class="card-tags">
-          <span class="tag ${isMale?'tag-m':'tag-f'}">${d['닮은꼴']||'—'}</span>
-          <span class="tag tag-mbti">${d['MBTI']||'—'}</span>
-          <span class="tag tag-hashtag">${(d['성격']||'').split(' ')[0]||'—'}</span>
+        <div class="card-detail">
+          <div class="card-row"><span class="cd-key">닮은꼴</span><span class="cd-val"><span class="tag ${isMale?'tag-m':'tag-f'}" style="padding:2px 8px;">${d['닮은꼴']||'—'}</span></span></div>
+          <div class="card-row"><span class="cd-key">MBTI</span><span class="cd-val"><span class="tag tag-mbti" style="padding:2px 8px;">${d['MBTI']||'—'}</span></span></div>
+          <div class="card-row"><span class="cd-key">태그</span><span class="cd-val" style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;">${(d['성격']||'').split(' ').filter(Boolean).map(t=>'<span class="tag tag-hashtag" style="padding:2px 7px;">'+t+'</span>').join('')||'—'}</span></div>
         </div>
       </div>`;
     grid.appendChild(card);
