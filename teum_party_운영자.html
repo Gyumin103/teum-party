@@ -14,7 +14,6 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 .header h1 em{font-style:normal;color:#e91e8c;}
 .refresh-btn{padding:8px 18px;border-radius:999px;border:1.5px solid #e91e8c;background:#fff;color:#e91e8c;font-size:13px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;}
 .refresh-btn:hover{background:#fff0f8;}
-
 .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:1.5rem;}
 .stat{background:#fff;border-radius:14px;padding:1rem;border:1px solid #fce4ec;text-align:center;}
 .stat-label{font-size:11px;color:#999;margin-bottom:4px;}
@@ -22,44 +21,42 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 .stat-num.pink{color:#e91e8c;}
 .stat-num.green{color:#2e7d32;}
 .stat-num.red{color:#c62828;}
-
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center;}
 .filter-label{font-size:13px;color:#888;}
 .pill{font-size:12px;padding:6px 14px;border-radius:999px;border:1.5px solid #e0e0e0;background:#fff;color:#888;cursor:pointer;font-family:'Gmarket Sans',sans-serif;transition:all 0.15s;font-weight:500;}
 .pill:hover{border-color:#f48fb1;color:#c2185b;}
 .pill.active{background:#e91e8c;border-color:#e91e8c;color:#fff;font-weight:700;}
-.pill.active-green{background:#2e7d32;border-color:#2e7d32;color:#fff;font-weight:700;}
-.pill.active-red{background:#c62828;border-color:#c62828;color:#fff;font-weight:700;}
 .search-input{flex:1;min-width:160px;height:36px;font-size:13px;border:1.5px solid #e0e0e0;border-radius:999px;padding:0 14px;background:#fff;color:#1a1a1a;outline:none;font-family:'Gmarket Sans',sans-serif;}
 .search-input:focus{border-color:#e91e8c;}
-
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
-.card{background:#fff;border:1px solid #fce4ec;border-radius:18px;overflow:hidden;cursor:pointer;transition:all 0.18s;position:relative;}
+
+/* 카드 */
+.card{background:#fff;border:1px solid #fce4ec;border-radius:14px;overflow:hidden;cursor:pointer;transition:all 0.18s;position:relative;}
 .card:hover{border-color:#e91e8c;transform:translateY(-2px);}
 .card.approved{border-color:#a5d6a7;background:#f1f8e9;}
-.card.rejected{border-color:#ef9a9a;background:#fff5f5;opacity:0.7;}
-.status-badge{position:absolute;top:10px;left:10px;font-size:10px;padding:3px 8px;border-radius:999px;font-weight:700;z-index:2;}
+.card.rejected{border-color:#ef9a9a;background:#fff5f5;opacity:0.75;}
+.card-body{padding:10px 12px 12px;}
+.card-status-row{display:flex;justify-content:flex-end;margin-bottom:5px;}
+.status-badge{font-size:10px;padding:2px 8px;border-radius:999px;font-weight:700;}
 .status-badge.검토중{background:#fff3e0;color:#e65100;border:1px solid #ffcc80;}
 .status-badge.승인{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
 .status-badge.탈락{background:#ffebee;color:#c62828;border:1px solid #ef9a9a;}
-.card-body{padding:12px 14px 14px;}
-.card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.card-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
-.card-sub{font-size:11px;color:#888;margin-top:2px;}
-.card-divider{height:0.5px;background:#f0f0f0;margin:8px 0;}
-.card-detail{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+.card-name-row{display:flex;align-items:center;gap:8px;margin-bottom:3px;}
+.card-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.card-name{font-size:14px;font-weight:700;color:#1a1a1a;}
+.badge-new{font-size:10px;padding:2px 6px;border-radius:999px;background:#fff0f8;color:#e91e8c;border:1px solid #f8bbd0;font-weight:700;margin-left:4px;}
+.card-sub{font-size:11px;color:#888;margin-bottom:5px;padding-left:40px;}
+.card-divider{height:0.5px;background:#f0f0f0;margin:5px 0;}
+.card-detail{display:flex;flex-direction:column;gap:2px;margin-bottom:5px;}
 .card-row{display:flex;justify-content:space-between;font-size:11px;}
-.cd-key{color:#aaa;}
-.cd-val{color:#333;font-weight:500;text-align:right;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.card-name{font-size:15px;font-weight:700;color:#1a1a1a;display:flex;align-items:center;gap:6px;}
-.badge-new{font-size:10px;padding:2px 7px;border-radius:999px;background:#fff0f8;color:#e91e8c;border:1px solid #f8bbd0;font-weight:700;}
-.card-info{font-size:12px;color:#888;margin-top:3px;}
-.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.cd-key{color:#bbb;}
+.cd-val{color:#333;font-weight:500;text-align:right;max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;}
 .tag{font-size:11px;padding:3px 8px;border-radius:999px;font-weight:500;}
 .tag-m{background:#E6F1FB;color:#185FA5;}
 .tag-f{background:#fce4ec;color:#993556;}
 .tag-mbti{background:#f3f0ff;color:#5b21b6;}
-.tag-hashtag{background:#e0f7fa;color:#00695c;font-size:11px;padding:3px 8px;border-radius:999px;font-weight:500;}
+.tag-hashtag{background:#e0f7fa;color:#00695c;}
 
 .loading{text-align:center;padding:3rem;color:#bbb;font-size:14px;}
 .empty{text-align:center;padding:2rem;color:#bbb;font-size:14px;}
@@ -68,7 +65,7 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;}
 .modal-bg.open{display:flex;}
 .modal{background:#fff;border-radius:24px;width:400px;max-width:95vw;position:relative;overflow:hidden;margin:auto;}
-.modal-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.15);border:none;color:#333;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
+.modal-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.12);border:none;color:#333;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
 .modal-top{padding:1.5rem 1.5rem 0;}
 .modal-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;margin:0 auto 12px;}
 .modal-name{text-align:center;font-size:19px;font-weight:700;color:#1a1a1a;}
@@ -83,22 +80,14 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 .tags-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
 .ptag{font-size:12px;padding:4px 10px;border-radius:999px;background:#fff0f8;color:#993556;border:1px solid #f4c0d1;font-weight:500;}
 .insta-link{color:#e91e8c;font-weight:700;text-decoration:none;}
-.insta-link:hover{text-decoration:underline;}
-
-/* 상태 버튼 */
 .status-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
 .btn-approve{height:48px;border-radius:12px;border:none;background:#e91e8c;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;transition:all 0.15s;}
-.btn-approve:hover{opacity:0.88;}
 .btn-approve.active{background:#2e7d32;}
 .btn-reject{height:48px;border-radius:12px;border:1.5px solid #e0e0e0;background:#fff;color:#999;font-size:14px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;transition:all 0.15s;}
-.btn-reject:hover{border-color:#ef9a9a;color:#c62828;}
 .btn-reject.active{background:#c62828;border-color:#c62828;color:#fff;}
 .btn-reset{width:100%;height:40px;border-radius:12px;border:1.5px solid #e0e0e0;background:#fff;color:#888;font-size:13px;cursor:pointer;font-family:'Gmarket Sans',sans-serif;margin-top:8px;}
-.btn-reset:hover{border-color:#bbb;}
-
 .saving{text-align:center;font-size:12px;color:#e91e8c;margin-top:8px;display:none;}
 .saving.show{display:block;}
-
 @media(max-width:480px){.stats{grid-template-columns:repeat(3,1fr);}}
 </style>
 </head>
@@ -108,7 +97,6 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
     <h1>✨ 틈파티 <em>운영자</em> 대시보드</h1>
     <button class="refresh-btn" onclick="loadData()">↻ 새로고침</button>
   </div>
-
   <div class="stats">
     <div class="stat"><div class="stat-label">전체</div><div class="stat-num pink" id="cnt-total">-</div></div>
     <div class="stat"><div class="stat-label">남성</div><div class="stat-num" id="cnt-m">-</div></div>
@@ -116,7 +104,6 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
     <div class="stat"><div class="stat-label">승인</div><div class="stat-num green" id="cnt-approved">-</div></div>
     <div class="stat"><div class="stat-label">탈락</div><div class="stat-num red" id="cnt-rejected">-</div></div>
   </div>
-
   <div class="filters">
     <span class="filter-label">성별</span>
     <button class="pill active" onclick="setFilter('gender','전체',this)">전체</button>
@@ -129,12 +116,11 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
     <button class="pill" onclick="setFilter('status','탈락',this)">탈락</button>
     <input class="search-input" id="search" placeholder="이름·직업·MBTI 검색..." oninput="renderCards()"/>
   </div>
-
   <div class="grid" id="grid"><div class="loading">데이터 불러오는 중... 🩷</div></div>
 </div>
 
 <div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
-  <div class="modal" id="modal">
+  <div class="modal">
     <button class="modal-close" onclick="document.getElementById('modal-bg').classList.remove('open')">×</button>
     <div id="modal-inner"></div>
   </div>
@@ -154,34 +140,23 @@ function loadData(){
   document.getElementById('grid').innerHTML='<div class="loading">데이터 불러오는 중... 🩷</div>';
   fetch(SCRIPT_URL)
     .then(r=>r.json())
-    .then(data=>{
-      allData=data;
-      updateStats();
-      renderCards();
-    })
-    .catch(()=>{
-      document.getElementById('grid').innerHTML='<div class="empty">데이터를 불러오지 못했어요 😢</div>';
-    });
+    .then(data=>{allData=data;updateStats();renderCards();})
+    .catch(()=>{document.getElementById('grid').innerHTML='<div class="empty">데이터를 불러오지 못했어요 😢</div>';});
 }
 
 function updateStats(){
   const now=new Date();
-  const todayY=now.getFullYear();
-  const todayM=now.getMonth()+1;
-  const todayD=now.getDate();
+  const y=now.getFullYear(),m=now.getMonth()+1,d=now.getDate();
   document.getElementById('cnt-total').textContent=allData.length;
   document.getElementById('cnt-m').textContent=allData.filter(d=>d['성별']==='남성').length;
   document.getElementById('cnt-f').textContent=allData.filter(d=>d['성별']==='여성').length;
   document.getElementById('cnt-approved').textContent=allData.filter(d=>d['상태']==='승인').length;
   document.getElementById('cnt-rejected').textContent=allData.filter(d=>d['상태']==='탈락').length;
-  const todayCnt=allData.filter(d=>{
-    const s=String(d['신청일시']||'');
-    if(!s)return false;
+  const todayCnt=allData.filter(p=>{
+    const s=String(p['신청일시']||'');
     const dt=new Date(s);
-    if(isNaN(dt)){
-      return s.includes(todayY+'')&&s.includes(todayM+'월')&&s.includes(todayD+'일');
-    }
-    return dt.getFullYear()===todayY&&dt.getMonth()+1===todayM&&dt.getDate()===todayD;
+    if(!isNaN(dt))return dt.getFullYear()===y&&dt.getMonth()+1===m&&dt.getDate()===d;
+    return s.includes(y+'')&&s.includes(m+'월')&&s.includes(d+'일');
   }).length;
   const el=document.getElementById('cnt-today');
   if(el)el.textContent=todayCnt;
@@ -197,54 +172,47 @@ function setFilter(key,val,el){
 function renderCards(){
   const q=document.getElementById('search').value.toLowerCase();
   const filtered=allData.filter(d=>{
-    const g=d['성별']||'';
+    if(filters.gender!=='전체'&&d['성별']!==filters.gender)return false;
     const s=d['상태']||'검토중';
-    if(filters.gender!=='전체'&&g!==filters.gender)return false;
     if(filters.status!=='전체'&&s!==filters.status)return false;
     if(q&&!JSON.stringify(d).toLowerCase().includes(q))return false;
     return true;
   });
-
   const grid=document.getElementById('grid');
   if(!filtered.length){grid.innerHTML='<div class="empty">해당하는 신청자가 없어요</div>';return;}
-
   grid.innerHTML='';
   filtered.forEach((d,i)=>{
-    const c=avatarColors[i%avatarColors.length];
     const isMale=d['성별']==='남성';
     const status=d['상태']||'검토중';
-    const today=new Date().toLocaleDateString('ko-KR');
-    const isNew=new Date(d['신청일시']).toLocaleDateString('ko-KR')===today;
-
-    const card=document.createElement('div');
-    card.className='card'+(status==='승인'?' approved':status==='탈락'?' rejected':'');
-    card.onclick=()=>openModal(d,c);
+    const now=new Date();
+    const isNew=new Date(d['신청일시']).toLocaleDateString('ko-KR')===now.toLocaleDateString('ko-KR');
     const avatarBg=isMale?'#E6F1FB':'#fce4ec';
     const avatarColor=isMale?'#185FA5':'#993556';
     const genderLabel=isMale?'남':'여';
+    const card=document.createElement('div');
+    card.className='card'+(status==='승인'?' approved':status==='탈락'?' rejected':'');
+    card.onclick=()=>openModal(d,avatarColors[i%avatarColors.length]);
     card.innerHTML=`
       <div class="card-body">
-        <div class="card-top">
-          <div class="card-top-left">
-            <div class="card-avatar" style="background:${avatarBg};color:${avatarColor}">${genderLabel}</div>
-            <div class="card-name">${d['이름']||'—'}${isNew?'<span class="badge-new">NEW</span>':''}</div>
-          </div>
+        <div class="card-status-row">
           <span class="status-badge ${status}">${status}</span>
         </div>
+        <div class="card-name-row">
+          <div class="card-avatar" style="background:${avatarBg};color:${avatarColor}">${genderLabel}</div>
+          <div class="card-name">${d['이름']||'—'}${isNew?'<span class="badge-new">NEW</span>':''}</div>
+        </div>
+        <div class="card-sub">${d['나이']||''} · ${d['키']||''}</div>
         <div class="card-divider"></div>
         <div class="card-detail">
-          <div class="card-row"><span class="cd-key">나이</span><span class="cd-val">${d['나이']||'—'}</span></div>
-          <div class="card-row"><span class="cd-key">키</span><span class="cd-val">${d['키']||'—'}</span></div>
           <div class="card-row"><span class="cd-key">직업</span><span class="cd-val">${d['직업']||'—'}</span></div>
         </div>
         <div class="card-divider"></div>
-        <div class="card-tags" style="gap:5px;flex-wrap:wrap;">
+        <div class="card-tags">
           <span class="tag ${isMale?'tag-m':'tag-f'}">${d['닮은꼴']||'—'}</span>
-          ${(d['성격']||'').split(' ').filter(Boolean).slice(0,2).map(t=>`<span class="tag tag-mbti">${t}</span>`).join('')}
           <span class="tag tag-mbti">${d['MBTI']||'—'}</span>
+          <span class="tag tag-hashtag">${(d['성격']||'').split(' ')[0]||'—'}</span>
         </div>
-      </div>
-    `;
+      </div>`;
     grid.appendChild(card);
   });
 }
@@ -253,7 +221,6 @@ function openModal(d,c){
   currentModalId=d['신청번호'];
   const status=d['상태']||'검토중';
   const tags=(d['성격']||'').split(' ').filter(Boolean);
-
   document.getElementById('modal-inner').innerHTML=`
     <div class="modal-top">
       <div class="modal-avatar" style="background:${c.bg};color:${c.text}">${d['이름']?d['이름'].slice(0,2):'??'}</div>
@@ -275,15 +242,14 @@ function openModal(d,c){
         <div class="tags-row">${tags.map(t=>`<span class="ptag">${t}</span>`).join('')||'—'}</div>
       </div>
       <div class="divider"></div>
-      <div class="info-key" style="font-size:13px;font-weight:700;color:#333;margin-bottom:8px;">승인 여부</div>
+      <div style="font-size:13px;font-weight:700;color:#333;margin-bottom:8px;">승인 여부</div>
       <div class="status-row">
         <button class="btn-approve ${status==='승인'?'active':''}" id="btn-approve" onclick="updateStatus('승인')">✅ 승인</button>
         <button class="btn-reject ${status==='탈락'?'active':''}" id="btn-reject" onclick="updateStatus('탈락')">❌ 탈락</button>
       </div>
       <button class="btn-reset" onclick="updateStatus('검토중')">↩ 검토중으로 되돌리기</button>
       <div class="saving" id="saving">저장 중...</div>
-    </div>
-  `;
+    </div>`;
   document.getElementById('modal-bg').classList.add('open');
 }
 
@@ -291,36 +257,22 @@ function updateStatus(status){
   if(!currentModalId)return;
   document.getElementById('saving').classList.add('show');
   document.getElementById('saving').textContent='저장 중...';
-
-  fetch(SCRIPT_URL,{
-    method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'updateStatus',id:currentModalId,status})
-  }).then(()=>{
-    // 로컬 데이터 업데이트
-    const idx=allData.findIndex(d=>d['신청번호']===currentModalId);
-    if(idx>-1)allData[idx]['상태']=status;
-    document.getElementById('saving').textContent='✅ 저장됨!';
-    setTimeout(()=>{
-      document.getElementById('saving').classList.remove('show');
-      document.getElementById('modal-bg').classList.remove('open');
-      updateStats();
-      renderCards();
-    },800);
-    // 버튼 상태 업데이트
-    document.getElementById('btn-approve').classList.toggle('active',status==='승인');
-    document.getElementById('btn-reject').classList.toggle('active',status==='탈락');
-  }).catch(()=>{
-    document.getElementById('saving').textContent='저장 실패 😢';
-  });
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateStatus',id:currentModalId,status})})
+    .then(()=>{
+      const idx=allData.findIndex(d=>d['신청번호']===currentModalId);
+      if(idx>-1)allData[idx]['상태']=status;
+      document.getElementById('saving').textContent='✅ 저장됨!';
+      setTimeout(()=>{
+        document.getElementById('saving').classList.remove('show');
+        document.getElementById('modal-bg').classList.remove('open');
+        updateStats();renderCards();
+      },800);
+      if(document.getElementById('btn-approve'))document.getElementById('btn-approve').classList.toggle('active',status==='승인');
+      if(document.getElementById('btn-reject'))document.getElementById('btn-reject').classList.toggle('active',status==='탈락');
+    }).catch(()=>{document.getElementById('saving').textContent='저장 실패 😢';});
 }
 
-function closeModal(e){
-  if(e.target===document.getElementById('modal-bg'))
-    document.getElementById('modal-bg').classList.remove('open');
-}
-
+function closeModal(e){if(e.target===document.getElementById('modal-bg'))document.getElementById('modal-bg').classList.remove('open');}
 loadData();
 </script>
 </body>
