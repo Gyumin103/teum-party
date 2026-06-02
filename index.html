@@ -398,9 +398,18 @@ function updatePreview(){
   `).join('');
 }
 
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzjziAHqZkvygW8oL5rtq200AIEfxFtJhTGzLvFvkDJrxfJ-TGq-iXn7vyUW9fFhXQa8Q/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwnNJfY-IRhpZDCHHQW2F2znYoCWaMUVPn8CWRdQ9SCgfrSFCzCh0UddIJl711LsbonGA/exec';
 
-function submit(){
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function submit(){
   const yr=document.getElementById('year').value;
   const g=document.getElementById('gender-sel').value;
   const otherOn=document.getElementById('other-tag-input').classList.contains('show');
@@ -408,6 +417,12 @@ function submit(){
   let finalTags=[...selectedTags];
   if(otherOn&&otherVal)finalTags.push(otherVal);
   const id='TEUM'+Date.now().toString().slice(-6);
+
+  // 사진 base64 변환
+  const faceFile=document.getElementById('inp-face').files[0];
+  const bodyFile=document.getElementById('inp-body').files[0];
+  const faceBase64=faceFile?await fileToBase64(faceFile):null;
+  const bodyBase64=bodyFile?await fileToBase64(bodyFile):null;
 
   const payload={
     id,
@@ -421,7 +436,9 @@ function submit(){
     insta:document.getElementById('insta').value||'—',
     look:document.getElementById('look').value||'—',
     tags:finalTags.join(' ')||'—',
-    mbti:selectedMbti
+    mbti:selectedMbti,
+    facePhoto:faceBase64,
+    bodyPhoto:bodyBase64
   };
 
   // 완료 화면 먼저 보여주고 백그라운드로 전송
