@@ -511,14 +511,21 @@ function buildSelectLists(){
       row.style.cssText='display:flex;align-items:center;gap:5px;font-size:11px;color:#333;cursor:pointer;padding:3px 6px;border-radius:6px;border:1px solid #eee;background:#fff;';
       const cb=document.createElement('input');cb.type='checkbox';cb.style.accentColor='#e91e8c';cb.dataset.idx=i;cb.dataset.g=g;
       cb.addEventListener('change',()=>{
-        selectedMen=[];selectedWomen=[];checkOrderMen=[];checkOrderWomen=[];
+        const fmt=d=>(d['연도']||'?').replace('년생','')+' / '+(d['키']||'?').replace('cm','')+' / '+(d['직업']||'?');
+        const isMale=cb.dataset.g==='남';
+        const person=isMale?men[parseInt(cb.dataset.idx)]:women[parseInt(cb.dataset.idx)];
+        const s=fmt(person);
+        const orderArr=isMale?checkOrderMen:checkOrderWomen;
+        if(cb.checked){
+          if(!orderArr.includes(s))orderArr.push(s);
+        } else {
+          const i=orderArr.indexOf(s);if(i>-1)orderArr.splice(i,1);
+        }
+        document.getElementById(isMale?'edit-man':'edit-woman').value=orderArr.join('\n');
+        selectedMen=[];selectedWomen=[];
         document.querySelectorAll('#select-men input:checked').forEach(c=>selectedMen.push(men[parseInt(c.dataset.idx)]));
         document.querySelectorAll('#select-women input:checked').forEach(c=>selectedWomen.push(women[parseInt(c.dataset.idx)]));
         document.getElementById('select-count').textContent='선택: 남 '+selectedMen.length+'명 / 여 '+selectedWomen.length+'명';
-        const fmt=d=>(d['연도']||'?').replace('년생','')+' / '+(d['키']||'?').replace('cm','')+' / '+(d['직업']||'?');
-        const pad=arr=>{const l=arr.map(fmt);while(l.length<PER_PAGE)l.push('');return l.slice(0,PER_PAGE).join('\n');};
-        document.getElementById('edit-man').value=pad(selectedMen);
-        document.getElementById('edit-woman').value=pad(selectedWomen);
         renderCard();
       });
       row.appendChild(cb);row.appendChild(document.createTextNode(yr+' / '+ht+' / '+(d['직업']||'?')));
