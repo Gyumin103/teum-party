@@ -337,7 +337,7 @@ function submitForm(){
     gender:g+'성', year:yr+'년생', age:getKorAge(yr),
     height:document.getElementById('height').value+'cm',
     job:document.getElementById('job').value,
-    phone:String(document.getElementById('phone').value),
+    phone:"'" + document.getElementById('phone').value,
     insta:document.getElementById('insta').value,
     look:document.getElementById('look').value||'—',
     tags:finalTags.join(' ')||'—', mbti:selectedMbti
