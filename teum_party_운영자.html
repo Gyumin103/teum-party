@@ -211,8 +211,8 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
     <div class="card-editor">
       <div class="card-settings">
         <h3>⚙️ 카드 설정</h3>
-        <div class="inp-row"><span class="inp-label">날짜</span><input class="inp-field" id="card-date" value="2026 6/7 (일)" oninput="renderCard()"/></div>
-        <div class="inp-row"><span class="inp-label">브랜드 문구</span><input class="inp-field" id="card-brand" value="TEUM PARTY · 참가자 명단" oninput="renderCard()"/></div>
+        <div class="inp-row"><span class="inp-label">날짜</span><select class="inp-field" id="card-date" onchange="renderCard()" style="appearance:none;-webkit-appearance:none;cursor:pointer;"><option value="">날짜 선택</option></select></div>
+        <div class="inp-row"><span class="inp-label">브랜드 문구</span><input class="inp-field" id="card-brand" value="TEUM PARTY · BEST 참가자 명단" oninput="renderCard()"/></div>
         <div class="inp-row"><span class="inp-label">인스타 계정</span><input class="inp-field" id="card-insta" value="@teum_party" oninput="renderCard()"/></div>
         <div style="height:0.5px;background:#eee;margin:10px 0;"></div>
         <h3 style="margin-bottom:8px;">👥 참가자 선택</h3>
@@ -246,14 +246,13 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
           <span class="page-info" id="page-info">1 / 1 페이지</span>
           <button class="page-btn" onclick="changePage(1)">›</button>
         </div>
-        <button class="save-btn" onclick="saveCard()">📸 이미지 저장</button>
       </div>
       <div class="card-preview-area">
         <div class="insta-card" id="insta-card">
           <div class="ic-corner tl"></div><div class="ic-corner tr"></div>
           <div class="ic-corner bl"></div><div class="ic-corner br"></div>
           <div class="ic-inner">
-            <div class="ic-brand" id="ic-brand">TEUM PARTY · 참가자 명단</div>
+            <div class="ic-brand" id="ic-brand">TEUM PARTY · BEST 참가자 명단</div>
             <div class="ic-date" id="ic-date">2026 6/7 (일)</div>
             <div class="ic-divider"><div class="ic-line"></div><div class="ic-diamond"></div><div class="ic-line"></div></div>
             <div class="ic-cols">
@@ -297,7 +296,7 @@ function switchTab(idx,el){
   el.classList.add('active');
   document.getElementById('tab'+idx).classList.add('active');
   if(idx===2)renderPastParties();
-  if(idx===1)renderCard();
+  if(idx===1){fillCardDateSelect();renderCard();}
 }
 
 function loadData(){
@@ -546,6 +545,19 @@ function changePage(dir){
   cardPage=Math.max(0,Math.min(cardPage+dir,t-1));renderCard();
 }
 
+function fillCardDateSelect(){
+  const sel=document.getElementById('card-date');
+  if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">날짜 선택</option>';
+  partyDates.forEach(d=>{
+    const o=document.createElement('option');
+    o.value=d;o.textContent=d;
+    if(d===cur)o.selected=true;
+    sel.appendChild(o);
+  });
+}
+
 function renderCard(){
   const icDate=document.getElementById('ic-date');if(!icDate)return;
   icDate.textContent=document.getElementById('card-date').value;
@@ -567,46 +579,7 @@ function renderCard(){
   document.getElementById('page-info').textContent=(cardPage+1)+' / '+t+' 페이지';
 }
 
-function saveCard(){
-  renderCard();
-  const card=document.getElementById('insta-card');
-  const w=card.offsetWidth||420;
-  const h=card.offsetHeight||600;
 
-  // SVG foreignObject 방식으로 캡처
-  const xml=new XMLSerializer().serializeToString(card);
-  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
-    +'<foreignObject width="100%" height="100%">'
-    +'<div xmlns="http://www.w3.org/1999/xhtml">'+card.outerHTML+'</div>'
-    +'</foreignObject></svg>';
-
-  // Canvas에 그리기
-  const img=new Image();
-  const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  img.onload=()=>{
-    const canvas=document.createElement('canvas');
-    canvas.width=w*2;canvas.height=h*2;
-    const ctx=canvas.getContext('2d');
-    ctx.scale(2,2);
-    ctx.fillStyle='#0d0d0d';
-    ctx.fillRect(0,0,w,h);
-    ctx.drawImage(img,0,0);
-    URL.revokeObjectURL(url);
-    const a=document.createElement('a');
-    a.download='틈파티_명단_'+(cardPage+1)+'페이지.png';
-    a.href=canvas.toDataURL('image/png');
-    a.click();
-  };
-  img.onerror=()=>{
-    URL.revokeObjectURL(url);
-    // 폴백: html2canvas
-    html2canvas(card,{scale:2,backgroundColor:'#0d0d0d',logging:false})
-      .then(c=>{const a=document.createElement('a');a.download='틈파티_명단.png';a.href=c.toDataURL('image/png');a.click();})
-      .catch(()=>alert('저장 실패 😢'));
-  };
-  img.src=url;
-}
 
 loadData();
 renderCard();
