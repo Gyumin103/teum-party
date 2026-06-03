@@ -162,7 +162,11 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 <div class="wrap">
   <div class="header">
     <h1>✨ 틈파티 <em>운영자</em> 대시보드</h1>
-    <button class="refresh-btn" id="main-refresh" onclick="loadData()">↻ 새로고침</button>
+    <div style="display:flex;gap:8px;">
+      <button class="refresh-btn" id="main-refresh" onclick="loadData()">↻ 새로고침</button>
+      <button class="refresh-btn" style="border-color:#c62828;color:#c62828;" onclick="deleteSelected()">🗑 선택 삭제</button>
+      <button class="refresh-btn" style="border-color:#555;color:#555;" onclick="toggleDateManager()">📅 날짜 관리</button>
+    </div>
   </div>
 
   <!-- 탭 -->
@@ -173,6 +177,18 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 
   <!-- 탭1: 신청자 관리 -->
   <div class="tab-content active" id="tab0">
+    <!-- 날짜 관리 패널 -->
+    <div id="date-manager" style="display:none;background:#fff;border:1px solid #fce4ec;border-radius:14px;padding:1rem 1.25rem;margin-bottom:1rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <span style="font-size:13px;font-weight:700;color:#1a1a1a;">📅 파티 날짜 관리</span>
+        <button onclick="toggleDateManager()" style="background:none;border:none;color:#aaa;font-size:18px;cursor:pointer;">×</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <input id="new-date-input" type="text" placeholder="예) 6/8 (일) 15:00" style="flex:1;height:38px;border:1.5px solid #e0e0e0;border-radius:10px;padding:0 12px;font-size:13px;font-family:'Gmarket Sans',sans-serif;outline:none;"/>
+        <button onclick="addDate()" style="height:38px;padding:0 16px;border-radius:10px;border:none;background:#e91e8c;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;">추가</button>
+      </div>
+      <div id="date-list" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+    </div>
     <div class="stats">
       <div class="stat">
         <div class="stat-label">전체 지원자</div>
@@ -212,6 +228,10 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
       <button class="pill" onclick="setFilter('status','승인',this)">승인</button>
       <button class="pill" onclick="setFilter('status','탈락',this)">탈락</button>
       <input class="search-input" id="search" placeholder="이름·직업·MBTI 검색..." oninput="renderCards()"/>
+    </div>
+    <div class="filters" id="date-filter-row" style="margin-top:-8px;">
+      <span class="filter-label">파티 날짜</span>
+      <div id="date-pills" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
     </div>
     <div class="grid" id="grid"><div class="loading">데이터 불러오는 중... 🩷</div></div>
   </div>
@@ -313,13 +333,14 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbw0ACr7xUO7UdraMIj-M7eRD3lt3UrGvVmYndNzT2xNg1qKVq-LJ-FUuut57i6S92ZBwg/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwgr8XHuSe6VNwukcasegsOv7sbL6hS2DF7ZaORBt3qf-fcBgFe9yH9ZFHDOZanUFhjSw/exec';
 const avatarColors=[
   {bg:'#E6F1FB',text:'#185FA5'},{bg:'#fce4ec',text:'#993556'},
   {bg:'#e8f5e9',text:'#2e7d32'},{bg:'#f3e5f5',text:'#6a1b9a'},
   {bg:'#fff3e0',text:'#e65100'},{bg:'#e0f7fa',text:'#00695c'},
 ];
-let allData=[], filters={gender:'전체',status:'전체'};
+let allData=[], filters={gender:'전체',status:'전체',date:'전체'};
+let partyDates=[], selectedDate='전체';
 let currentModalId=null;
 const PER_PAGE=7;
 let cardPage=0;
@@ -339,7 +360,7 @@ function loadData(){
   document.getElementById('grid').innerHTML='<div class="loading">데이터 불러오는 중... 🩷</div>';
   fetch(SCRIPT_URL)
     .then(r=>r.json())
-    .then(data=>{allData=data;updateStats();renderCards();buildSelectLists();})
+    .then(res=>{allData=res.data||res;partyDates=res.dates||[];updateStats();renderCards();buildSelectLists();renderDateFilter();renderDateManager();})
     .catch(()=>{document.getElementById('grid').innerHTML='<div class="empty">데이터를 불러오지 못했어요 😢</div>';});
 }
 
@@ -373,6 +394,7 @@ function renderCards(){
     if(filters.gender!=='전체'&&d['성별']!==filters.gender)return false;
     const s=d['상태']||'검토중';
     if(filters.status!=='전체'&&s!==filters.status)return false;
+    if(filters.date!=='전체'&&(d['파티날짜']||'미선택')!==filters.date)return false;
     if(q&&!JSON.stringify(d).toLowerCase().includes(q))return false;
     return true;
   });
@@ -393,11 +415,12 @@ function renderCards(){
     card.innerHTML=`
       <div class="card-body">
         <div class="card-name-row">
+          <input type="checkbox" class="card-check" data-id="${d['신청번호']}" onclick="event.stopPropagation()" style="accent-color:#e91e8c;cursor:pointer;flex-shrink:0;"/>
           <div class="card-avatar" style="background:${avatarBg};color:${avatarColor}">${genderLabel}</div>
           <div class="card-name">${d['이름']||'—'}${isNew?'<span class="badge-new">NEW</span>':''}</div>
           <span class="status-badge ${status}" style="margin-left:auto;">${status}</span>
         </div>
-        <div class="card-sub">${d['나이']||''} · ${d['키']||''} · ${d['직업']||''}</div>
+        <div class="card-sub">${d['파티날짜']?'📅 '+d['파티날짜']+' · ':''} ${d['나이']||''} · ${d['키']||''} · ${d['직업']||''}</div>
         <div class="card-divider"></div>
         <div class="card-detail">
           <div class="card-row-left"><span class="cd-key" style="min-width:42px;">닮은꼴</span><span class="tag ${isMale?'tag-m':'tag-f'}">${d['닮은꼴']||'—'}</span></div>
@@ -462,6 +485,74 @@ function updateStatus(status){
       if(document.getElementById('btn-approve'))document.getElementById('btn-approve').classList.toggle('active',status==='승인');
       if(document.getElementById('btn-reject'))document.getElementById('btn-reject').classList.toggle('active',status==='탈락');
     }).catch(()=>{document.getElementById('saving').textContent='저장 실패 😢';});
+}
+
+function renderDateFilter(){
+  const el=document.getElementById('date-pills');
+  if(!el)return;
+  const all=['전체',...partyDates];
+  el.innerHTML=all.map(d=>`<button class="pill ${filters.date===d?'active':''}" onclick="setDateFilter('${d}',this)">${d}</button>`).join('');
+}
+
+function setDateFilter(val,el){
+  filters.date=val;
+  document.querySelectorAll('#date-pills .pill').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderCards();
+}
+
+function toggleDateManager(){
+  const el=document.getElementById('date-manager');
+  el.style.display=el.style.display==='none'?'block':'none';
+}
+
+function renderDateManager(){
+  const el=document.getElementById('date-list');
+  if(!el)return;
+  el.innerHTML=partyDates.map(d=>`
+    <div style="display:flex;align-items:center;gap:4px;background:#fff0f8;border:1px solid #f8bbd0;border-radius:999px;padding:4px 12px;font-size:12px;color:#c2185b;">
+      ${d}
+      <button onclick="removeDate('${d}')" style="background:none;border:none;color:#f48fb1;cursor:pointer;font-size:14px;line-height:1;margin-left:2px;">×</button>
+    </div>`).join('');
+}
+
+function addDate(){
+  const val=document.getElementById('new-date-input').value.trim();
+  if(!val)return;
+  if(partyDates.includes(val)){alert('이미 있는 날짜예요');return;}
+  partyDates.push(val);
+  saveDates();
+  document.getElementById('new-date-input').value='';
+}
+
+function removeDate(d){
+  if(!confirm(d+' 날짜를 삭제할까요?'))return;
+  partyDates=partyDates.filter(x=>x!==d);
+  saveDates();
+}
+
+function saveDates(){
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'updateDates',dates:partyDates})
+  });
+  renderDateFilter();
+  renderDateManager();
+}
+
+function deleteSelected(){
+  const checked=[...document.querySelectorAll('.card-check:checked')].map(cb=>cb.dataset.id);
+  if(!checked.length){alert('삭제할 신청자를 선택해 주세요');return;}
+  if(!confirm(checked.length+'명을 삭제할까요? 복구가 불가능해요.'))return;
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'deleteRows',ids:checked})
+  }).then(()=>{
+    setTimeout(()=>loadData(),800);
+  });
+  // 즉시 화면에서 제거
+  checked.forEach(id=>{
+    allData=allData.filter(d=>String(d['신청번호'])!==id);
+  });
+  updateStats();renderCards();
 }
 
 function closeModal(e){if(e.target===document.getElementById('modal-bg'))document.getElementById('modal-bg').classList.remove('open');}
