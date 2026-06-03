@@ -3,354 +3,639 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>2026 외모승인 틈파티 신청서</title>
-<link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&display=swap" rel="stylesheet"/>
+<title>틈파티 운영자 대시보드</title>
+<link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&family=Noto+Serif+KR:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;}
-.wrap{max-width:480px;margin:0 auto;padding:0 1.25rem 3rem;}
-.hero{padding:2rem 0 1.5rem;text-align:center;}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:0.08em;padding:5px 14px;border-radius:999px;background:#fff0f5;color:#c2185b;border:1px solid #f8bbd0;margin-bottom:14px;}
-.hero h1{font-size:27px;font-weight:700;line-height:1.4;color:#1a1a1a;}
-.hero h1 em{font-style:normal;color:#e91e8c;}
-.hero p{font-size:13px;color:#555;margin-top:8px;line-height:1.9;}
-.step-track{display:flex;align-items:center;margin:0 0 1.75rem;}
-.st{display:flex;flex-direction:column;align-items:center;flex:1;}
-.st-dot{width:28px;height:28px;border-radius:50%;border:1.5px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all 0.25s;color:#777;}
-.st.on .st-dot{background:#e91e8c;border-color:#e91e8c;color:#fff;}
-.st.done .st-dot{background:#fce4ec;border-color:#e91e8c;color:#e91e8c;font-size:12px;}
-.st-line{flex:1;height:1.5px;background:#eee;transition:background 0.3s;margin-bottom:16px;}
-.st-label{font-size:10px;color:#bbb;margin-top:5px;text-align:center;white-space:nowrap;}
-.st.on .st-label{color:#e91e8c;font-weight:700;}
-.st.done .st-label{color:#e91e8c;}
-.st-line.done{background:#e91e8c;}
-.step{display:none;flex-direction:column;gap:1.1rem;animation:fadeUp 0.25s ease;}
-.step.active{display:flex;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.section-label{font-size:12px;font-weight:700;letter-spacing:0.08em;color:#e91e8c;}
-.field{display:flex;flex-direction:column;gap:5px;}
-.field label{font-size:13px;color:#444;}
-.req{color:#e91e8c;}
-.field input{height:48px;border-radius:12px;border:1.5px solid #e0e0e0;padding:0 14px;font-size:15px;color:#111;background:#fff;width:100%;outline:none;font-family:'Gmarket Sans',sans-serif;transition:border-color 0.15s,box-shadow 0.15s;}
-.field input:focus{border-color:#e91e8c;box-shadow:0 0 0 3px rgba(233,30,140,0.08);}
-.field input::placeholder{color:#777;}
-.select-wrap{position:relative;}
-.select-wrap select{height:48px;border-radius:12px;border:1.5px solid #e0e0e0;padding:0 14px;font-size:15px;color:#111;background:#fff;width:100%;outline:none;font-family:'Gmarket Sans',sans-serif;transition:border-color 0.15s,box-shadow 0.15s;appearance:none;-webkit-appearance:none;cursor:pointer;}
-.select-wrap select:focus{border-color:#e91e8c;box-shadow:0 0 0 3px rgba(233,30,140,0.08);}
-.select-wrap::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:14px;color:#777;pointer-events:none;}
-.hint{font-size:11px;color:#888;line-height:1.6;}
-.hint.pink{color:#e91e8c;font-weight:700;}
-.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-.tags-grid{display:flex;flex-wrap:wrap;gap:8px;}
-.tag-btn{padding:9px 16px;border-radius:10px;border:1.5px solid #e0e0e0;background:#fff;font-size:13px;font-weight:500;cursor:pointer;color:#444;font-family:'Gmarket Sans',sans-serif;transition:all 0.18s;}
-.tag-btn:hover{border-color:#f48fb1;color:#c2185b;}
-.tag-btn.selected{border-color:#e91e8c;background:#e91e8c;color:#fff;font-weight:700;}
-.mbti-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.mbti-btn{height:48px;border-radius:10px;border:1.5px solid #e0e0e0;background:#fff;font-size:13px;font-weight:700;cursor:pointer;color:#444;font-family:'Gmarket Sans',sans-serif;transition:all 0.18s;letter-spacing:0.02em;}
-.mbti-btn:hover{border-color:#f48fb1;color:#c2185b;}
-.mbti-btn.selected{border-color:#e91e8c;background:#e91e8c;color:#fff;}
-.tag-count{font-size:11px;color:#888;margin-top:2px;}
-.other-input{height:44px;border-radius:10px;border:1.5px solid #e0e0e0;padding:0 12px;font-size:14px;color:#111;background:#fff;width:100%;outline:none;font-family:'Gmarket Sans',sans-serif;margin-top:6px;display:none;transition:border-color 0.15s;}
-.other-input.show{display:block;}
-.other-input:focus{border-color:#e91e8c;}
-.btn-next{width:100%;height:52px;border-radius:12px;border:none;background:#e91e8c;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;transition:opacity 0.15s,transform 0.1s;letter-spacing:0.02em;margin-top:0.25rem;}
-.btn-next:hover{opacity:0.9;}
-.btn-next:active{transform:scale(0.98);}
-.btn-back{background:none;border:1.5px solid #e0e0e0;color:#777;width:100%;height:44px;border-radius:12px;font-size:14px;cursor:pointer;font-family:'Gmarket Sans',sans-serif;transition:all 0.15s;}
-.btn-back:hover{border-color:#bbb;color:#444;}
-.preview-card{background:#fafafa;border-radius:14px;padding:1rem 1.25rem;border:1px solid #eee;}
-.preview-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid #eee;font-size:13px;}
-.preview-row:last-child{border-bottom:none;}
-.preview-key{color:#777;flex-shrink:0;}
-.preview-val{color:#111;font-weight:500;text-align:right;max-width:65%;}
-.success-wrap{text-align:center;padding:2rem 0;animation:fadeUp 0.4s ease;}
-.confetti-row{font-size:30px;letter-spacing:4px;margin-bottom:16px;}
-.success-badge{display:inline-block;padding:10px 24px;border-radius:999px;background:#fff0f8;border:1.5px solid #f48fb1;color:#c2185b;font-size:14px;font-weight:700;margin-bottom:16px;}
-.success-wrap h2{font-size:22px;font-weight:700;color:#1a1a1a;}
-.success-wrap p{font-size:13px;color:#777;margin-top:8px;line-height:1.9;}
-.success-id{display:inline-block;margin-top:16px;font-size:12px;color:#bbb;background:#f5f5f5;padding:6px 14px;border-radius:8px;}
-.err{font-size:11px;color:#e91e8c;display:none;margin-top:2px;}
-.err.show{display:block;}
+body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;padding:1.5rem 1rem 3rem;}
+.wrap{max-width:960px;margin:0 auto;}
+.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:2px solid #fce4ec;}
+.header h1{font-size:20px;font-weight:700;color:#1a1a1a;}
+.header h1 em{font-style:normal;color:#e91e8c;}
+.hbtns{display:flex;gap:8px;flex-wrap:wrap;}
+.hbtn{padding:7px 16px;border-radius:999px;border:1.5px solid #e0e0e0;background:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;transition:all 0.15s;color:#666;}
+.hbtn.pink{border-color:#e91e8c;color:#e91e8c;}
+.hbtn.pink:hover{background:#fff0f8;}
+.hbtn.red{border-color:#c62828;color:#c62828;}
+.hbtn.red:hover{background:#ffebee;}
+.hbtn:hover{border-color:#bbb;}
+.tabs{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:2px solid #fce4ec;}
+.tab{padding:10px 24px;font-size:14px;font-weight:500;color:#aaa;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s;font-family:'Gmarket Sans',sans-serif;}
+.tab:hover{color:#e91e8c;}
+.tab.active{color:#e91e8c;font-weight:700;border-bottom:2px solid #e91e8c;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem;}
+.stat{background:#fff;border-radius:14px;padding:0.75rem 0.5rem;border:1px solid #fce4ec;text-align:center;}
+.stat-label{font-size:11px;color:#999;margin-bottom:4px;}
+.stat-num{font-size:22px;font-weight:700;color:#1a1a1a;}
+.stat-num.pink{color:#e91e8c;}
+.stat-num.green{color:#2e7d32;}
+.stat-num.red{color:#c62828;}
+.stat-sub-row{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:4px;}
+.stat-sub{font-size:12px;color:#888;}
+.stat-sub b{font-weight:700;color:#1a1a1a;}
+.stat-div{color:#ddd;font-size:12px;}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;align-items:center;}
+.filter-label{font-size:13px;color:#888;}
+.pill{font-size:12px;padding:6px 14px;border-radius:999px;border:1.5px solid #e0e0e0;background:#fff;color:#888;cursor:pointer;font-family:'Gmarket Sans',sans-serif;transition:all 0.15s;font-weight:500;}
+.pill:hover{border-color:#f48fb1;color:#c2185b;}
+.pill.active{background:#e91e8c;border-color:#e91e8c;color:#fff;font-weight:700;}
+.search-input{flex:1;min-width:160px;height:36px;font-size:13px;border:1.5px solid #e0e0e0;border-radius:999px;padding:0 14px;background:#fff;color:#1a1a1a;outline:none;font-family:'Gmarket Sans',sans-serif;}
+.search-input:focus{border-color:#e91e8c;}
+.date-manager-panel{background:#fff;border:1px solid #fce4ec;border-radius:14px;padding:1rem 1.25rem;margin-bottom:1rem;display:none;}
+.date-manager-panel.open{display:block;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.card{background:#fff;border:1px solid #fce4ec;border-radius:14px;overflow:hidden;cursor:pointer;transition:all 0.18s;}
+.card:hover{border-color:#e91e8c;transform:translateY(-2px);}
+.card.approved{border-color:#a5d6a7;background:#f1f8e9;}
+.card.rejected{border-color:#ef9a9a;background:#fff5f5;opacity:0.75;}
+.card-body{padding:10px 12px 12px;}
+.status-badge{font-size:10px;padding:2px 8px;border-radius:999px;font-weight:700;}
+.status-badge.검토중{background:#fff3e0;color:#e65100;border:1px solid #ffcc80;}
+.status-badge.승인{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+.status-badge.탈락{background:#ffebee;color:#c62828;border:1px solid #ef9a9a;}
+.card-name-row{display:flex;align-items:center;gap:8px;margin-bottom:3px;}
+.card-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.card-name{font-size:14px;font-weight:700;color:#1a1a1a;}
+.badge-new{font-size:10px;padding:2px 6px;border-radius:999px;background:#fff0f8;color:#e91e8c;border:1px solid #f8bbd0;font-weight:700;margin-left:4px;}
+.card-sub{font-size:11px;color:#888;margin-bottom:5px;padding-left:40px;}
+.card-divider{height:0.5px;background:#f0f0f0;margin:5px 0;}
+.card-detail{display:flex;flex-direction:column;gap:2px;margin-bottom:5px;}
+.card-row-left{display:flex;align-items:center;gap:5px;font-size:11px;flex-wrap:nowrap;overflow:hidden;}
+.cd-key{color:#bbb;min-width:42px;flex-shrink:0;}
+.tag{font-size:11px;padding:3px 9px;border-radius:999px;font-weight:500;white-space:nowrap;}
+.tag-m{background:#E6F1FB;color:#185FA5;}
+.tag-f{background:#fce4ec;color:#993556;}
+.tag-mbti{background:#f3f0ff;color:#5b21b6;}
+.tag-hashtag{background:#e0f7fa;color:#00695c;}
+.loading{text-align:center;padding:3rem;color:#bbb;font-size:14px;grid-column:1/-1;}
+.empty{text-align:center;padding:2rem;color:#bbb;font-size:14px;grid-column:1/-1;}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;}
+.modal-bg.open{display:flex;}
+.modal{background:#fff;border-radius:24px;width:400px;max-width:95vw;position:relative;overflow:hidden;margin:auto;}
+.modal-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.12);border:none;color:#333;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
+.modal-top{padding:1.5rem 1.5rem 0;}
+.modal-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;margin:0 auto 12px;}
+.modal-name{text-align:center;font-size:19px;font-weight:700;color:#1a1a1a;}
+.modal-sub{text-align:center;font-size:13px;color:#888;margin-top:4px;}
+.mdivider{height:0.5px;background:#f0f0f0;margin:12px 0;}
+.modal-content{padding:0 1.5rem 1.5rem;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.info-item{background:#fafafa;border-radius:10px;padding:8px 10px;}
+.info-key{font-size:11px;color:#999;margin-bottom:2px;}
+.info-val{font-size:13px;font-weight:700;color:#1a1a1a;}
+.info-full{background:#fafafa;border-radius:10px;padding:8px 10px;margin-top:8px;}
+.tags-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
+.ptag{font-size:12px;padding:4px 10px;border-radius:999px;background:#fff0f8;color:#993556;border:1px solid #f4c0d1;font-weight:500;}
+.insta-link{color:#e91e8c;font-weight:700;text-decoration:none;}
+.status-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.btn-approve{height:48px;border-radius:12px;border:none;background:#e91e8c;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;}
+.btn-approve.active{background:#2e7d32;}
+.btn-reject{height:48px;border-radius:12px;border:1.5px solid #e0e0e0;background:#fff;color:#999;font-size:14px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;}
+.btn-reject.active{background:#c62828;border-color:#c62828;color:#fff;}
+.btn-reset{width:100%;height:40px;border-radius:12px;border:1.5px solid #e0e0e0;background:#fff;color:#888;font-size:13px;cursor:pointer;font-family:'Gmarket Sans',sans-serif;margin-top:8px;}
+.saving{text-align:center;font-size:12px;color:#e91e8c;margin-top:8px;display:none;}
+.saving.show{display:block;}
+/* 탭2 */
+.card-editor{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.card-settings{flex:1;min-width:260px;}
+.card-settings h3{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:10px;}
+.inp-row{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
+.inp-label{font-size:12px;color:#666;font-weight:500;}
+.inp-field{height:40px;border:1.5px solid #e0e0e0;border-radius:10px;padding:0 12px;font-size:13px;font-family:'Gmarket Sans',sans-serif;color:#1a1a1a;outline:none;}
+.inp-field:focus{border-color:#e91e8c;}
+.card-preview{flex:1;min-width:300px;display:flex;flex-direction:column;align-items:center;}
+.insta-card{width:480px;max-width:100%;background:#0d0d0d;position:relative;overflow:hidden;}
+.insta-card::before{content:'';position:absolute;inset:0;border:1.5px solid transparent;background:linear-gradient(#0d0d0d,#0d0d0d) padding-box,linear-gradient(135deg,#c9a84c,#f0d080,#c9a84c,#8b6914) border-box;pointer-events:none;z-index:10;}
+.ic-corner{position:absolute;width:20px;height:20px;z-index:11;}
+.ic-corner.tl{top:10px;left:10px;border-top:1.5px solid #c9a84c;border-left:1.5px solid #c9a84c;}
+.ic-corner.tr{top:10px;right:10px;border-top:1.5px solid #c9a84c;border-right:1.5px solid #c9a84c;}
+.ic-corner.bl{bottom:10px;left:10px;border-bottom:1.5px solid #c9a84c;border-left:1.5px solid #c9a84c;}
+.ic-corner.br{bottom:10px;right:10px;border-bottom:1.5px solid #c9a84c;border-right:1.5px solid #c9a84c;}
+.ic-inner{padding:24px 30px;position:relative;z-index:1;}
+.ic-brand{font-family:'Playfair Display',serif;font-size:10px;letter-spacing:0.3em;color:#c9a84c;text-transform:uppercase;text-align:center;margin-bottom:6px;}
+.ic-date{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:#f5f0e8;letter-spacing:0.05em;text-align:center;line-height:1.3;}
+.ic-divider{display:flex;align-items:center;gap:6px;margin:10px 0;}
+.ic-divider-line{flex:1;height:0.5px;background:linear-gradient(90deg,transparent,#c9a84c,transparent);}
+.ic-diamond{width:4px;height:4px;background:#c9a84c;transform:rotate(45deg);flex-shrink:0;}
+.ic-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.ic-col{padding:0 8px;}
+.ic-col:first-child{border-right:0.5px solid #2a2620;padding-left:0;}
+.ic-col:last-child{padding-right:0;}
+.ic-col-header{text-align:center;font-size:9px;font-weight:700;letter-spacing:0.25em;color:#c9a84c;margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid #2a2620;}
+.ic-person{text-align:center;font-size:10.5px;color:#d4cfc5;font-weight:300;padding:4px 8px;margin-bottom:4px;letter-spacing:0.03em;border:0.5px solid #2a2620;border-radius:999px;background:rgba(201,168,76,0.04);}
+.ic-footer{text-align:center;margin-top:8px;font-size:8px;color:#4a4540;letter-spacing:0.2em;text-transform:uppercase;}
+.page-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px;}
+.page-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid #e0e0e0;background:#fff;font-size:16px;cursor:pointer;}
+.page-btn:hover{border-color:#e91e8c;color:#e91e8c;}
+.page-info{font-size:13px;color:#666;}
+.save-btn{width:100%;height:44px;border-radius:10px;border:none;background:#1a1a1a;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;margin-top:12px;}
+.save-btn:hover{opacity:0.85;}
+@media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr);}.card-editor{flex-direction:column;}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="hero">
-    <div class="hero-eyebrow">✨ 2026 외모승인 틈파티</div>
-    <h1>외모로 승인받는<br><em>그 설레는 틈</em> 🩷</h1>
-    <p>딱 1분이면 신청 끝!<br>당신의 외모, 지금 바로 승인해드릴게요 😏</p>
+  <div class="header">
+    <h1>✨ 틈파티 <em>운영자</em> 대시보드</h1>
+    <div class="hbtns">
+      <button class="hbtn pink" id="main-refresh" onclick="loadData()">↻ 새로고침</button>
+      <button class="hbtn red" onclick="deleteSelected()">🗑 선택 삭제</button>
+      <button class="hbtn" onclick="toggleDateManager()">📅 날짜 관리</button>
+    </div>
   </div>
 
-  <div class="step-track">
-    <div class="st on" id="st0"><div class="st-dot">1</div><div class="st-label">기본 정보</div></div>
-    <div class="st-line" id="sl0"></div>
-    <div class="st" id="st1"><div class="st-dot">2</div><div class="st-label">상세 정보</div></div>
-    <div class="st-line" id="sl1"></div>
-    <div class="st" id="st2"><div class="st-dot">3</div><div class="st-label">내용 확인</div></div>
+  <!-- 날짜 관리 패널 -->
+  <div class="date-manager-panel" id="date-manager-panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span style="font-size:13px;font-weight:700;color:#1a1a1a;">📅 파티 날짜 관리</span>
+      <button onclick="toggleDateManager()" style="background:none;border:none;color:#aaa;font-size:20px;cursor:pointer;line-height:1;">×</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <input id="new-date-input" type="text" placeholder="예) 6/8 (일) 15:00" style="flex:1;height:38px;border:1.5px solid #e0e0e0;border-radius:10px;padding:0 12px;font-size:13px;font-family:'Gmarket Sans',sans-serif;outline:none;"/>
+      <button onclick="addPartyDate()" style="height:38px;padding:0 16px;border-radius:10px;border:none;background:#e91e8c;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;">추가</button>
+    </div>
+    <div id="date-tag-list" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
   </div>
 
-  <!-- STEP 1: 기본 정보 -->
-  <div class="step active" id="s0">
-    <div class="field">
-      <label>참가 파티 날짜 <span class="req">*</span></label>
-      <div class="select-wrap">
-        <select id="party-date"><option value="">날짜를 선택해 주세요</option></select>
-      </div>
-      <span class="err" id="err-partydate">참가 날짜를 선택해 주세요</span>
-    </div>
-    <div class="field">
-      <label>이름 <span class="req">*</span></label>
-      <input id="name" type="text" placeholder="실명으로 꼭 작성해 주세요"/>
-      <span class="hint">닉네임 사용 시 신청이 취소될 수 있어요</span>
-      <span class="err" id="err-name">실명을 입력해 주세요</span>
-    </div>
-    <div class="row3">
-      <div class="field">
-        <label>성별 <span class="req">*</span></label>
-        <div class="select-wrap">
-          <select id="gender-sel"><option value="">선택</option><option value="남">남성</option><option value="여">여성</option></select>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(0,this)">📋 신청자 관리</div>
+    <div class="tab" onclick="switchTab(1,this)">📣 홍보 명단 카드</div>
+  </div>
+
+  <!-- 탭1 -->
+  <div class="tab-content active" id="tab0">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">전체 지원자</div>
+        <div class="stat-num pink" id="cnt-total">-</div>
+        <div class="stat-sub-row">
+          <span class="stat-sub">남 <b id="cnt-m">-</b></span>
+          <span class="stat-div">/</span>
+          <span class="stat-sub">여 <b id="cnt-f">-</b></span>
         </div>
-        <span class="err" id="err-gender">선택해 주세요</span>
       </div>
-      <div class="field">
-        <label>태어난 연도 <span class="req">*</span></label>
-        <div class="select-wrap"><select id="year"><option value="">선택</option></select></div>
-        <span class="err" id="err-year">선택해 주세요</span>
+      <div class="stat">
+        <div class="stat-label">검토중</div>
+        <div class="stat-num" style="color:#e65100;" id="cnt-review">-</div>
       </div>
-      <div class="field">
-        <label>키 <span class="req">*</span></label>
-        <div class="select-wrap"><select id="height"><option value="">선택</option></select></div>
-        <span class="err" id="err-height">선택해 주세요</span>
+      <div class="stat">
+        <div class="stat-label">승인</div>
+        <div class="stat-num green" id="cnt-approved">-</div>
+        <div class="stat-sub-row">
+          <span class="stat-sub">남 <b id="cnt-approved-m">-</b></span>
+          <span class="stat-div">/</span>
+          <span class="stat-sub">여 <b id="cnt-approved-f">-</b></span>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">탈락</div>
+        <div class="stat-num red" id="cnt-rejected">-</div>
       </div>
     </div>
-    <div class="field">
-      <label>직업 <span class="req">*</span></label>
-      <input id="job" type="text" placeholder="예) 개발자, 간호사, 대학원생..."/>
-      <span class="err" id="err-job">직업을 입력해 주세요</span>
+
+    <div class="filters">
+      <span class="filter-label">성별</span>
+      <button class="pill active" onclick="setFilter('gender','전체',this)">전체</button>
+      <button class="pill" onclick="setFilter('gender','남성',this)">남성</button>
+      <button class="pill" onclick="setFilter('gender','여성',this)">여성</button>
+      <span class="filter-label" style="margin-left:8px;">상태</span>
+      <button class="pill active" onclick="setFilter('status','전체',this)">전체</button>
+      <button class="pill" onclick="setFilter('status','검토중',this)">검토중</button>
+      <button class="pill" onclick="setFilter('status','승인',this)">승인</button>
+      <button class="pill" onclick="setFilter('status','탈락',this)">탈락</button>
+      <input class="search-input" id="search" placeholder="이름·직업·MBTI 검색..." oninput="renderCards()"/>
     </div>
-    <div class="field">
-      <label>연락처 <span class="req">*</span></label>
-      <input id="phone" type="tel" placeholder="010-0000-0000"/>
-      <span class="hint">🔒 운영자에게만 공개돼요</span>
-      <span class="err" id="err-phone">연락처를 입력해 주세요</span>
+    <div class="filters" style="margin-top:-4px;">
+      <span class="filter-label">파티 날짜</span>
+      <div id="date-filter-pills" style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="pill active" onclick="setFilter('date','전체',this)">전체</button>
+      </div>
     </div>
-    <div class="field">
-      <label>인스타그램 계정 <span class="req">*</span></label>
-      <input id="insta" type="text" placeholder="@아이디"/>
-      <span class="hint pink">✨ 인스타 계정으로 사진 확인 후 승인돼요!</span>
-      <span class="err" id="err-insta">인스타그램 계정을 입력해 주세요</span>
-    </div>
-    <button class="btn-next" onclick="next(0)">다음 →</button>
+
+    <div class="grid" id="grid"><div class="loading">데이터 불러오는 중... 🩷</div></div>
   </div>
 
-  <!-- STEP 2: 성격 & MBTI -->
-  <div class="step" id="s1">
-    <div class="field">
-      <label>닮은꼴 연예인 <span style="color:#aaa;font-size:11px;">(선택)</span></label>
-      <input id="look" type="text" placeholder="예) 아이유, 차은우..."/>
-    </div>
-    <div class="field">
-      <label>나를 표현하는 해시태그 <span class="req">*</span> <span style="color:#aaa;font-size:11px;">최대 3개</span></label>
-      <div class="tags-grid" id="tags-grid"></div>
-      <input class="other-input" id="other-tag-input" placeholder="직접 입력 (예: #내향적)"/>
-      <div class="tag-count" id="tag-count">0 / 3개 선택</div>
-      <span class="err" id="err-tags">해시태그를 1개 이상 선택해 주세요</span>
-    </div>
-    <div class="field">
-      <label>MBTI <span class="req">*</span></label>
-      <div class="mbti-grid" id="mbti-grid"></div>
-      <span class="err" id="err-mbti">MBTI를 선택해 주세요</span>
-    </div>
-    <button class="btn-next" onclick="next(1)">다음 →</button>
-    <button class="btn-back" onclick="back(1)">← 이전</button>
-  </div>
-
-  <!-- STEP 3: 내용 확인 -->
-  <div class="step" id="s2">
-    <div class="hint" style="font-size:12px;">내용을 확인하고 문제 없으면 신청을 완료해 주세요</div>
-    <div class="preview-card" id="preview"></div>
-    <button class="btn-next" onclick="submitForm()">💌 신청 완료하기</button>
-    <button class="btn-back" onclick="back(2)">← 이전</button>
-  </div>
-
-  <!-- 완료 -->
-  <div class="step" id="s-done">
-    <div class="success-wrap">
-      <div class="confetti-row">🎉🩷🎊</div>
-      <div class="success-badge">외모 승인 완료 ✅</div>
-      <h2>틈파티에서<br>만나요 🩷</h2>
-      <p>운영자가 검토 후<br>인스타 DM으로 연락드릴게요 💌</p>
-      <div class="success-id" id="apply-id"></div>
+  <!-- 탭2 -->
+  <div class="tab-content" id="tab1">
+    <div class="card-editor">
+      <div class="card-settings">
+        <h3>⚙️ 카드 설정</h3>
+        <div class="inp-row">
+          <span class="inp-label">날짜</span>
+          <input class="inp-field" id="card-date" value="5 / 31 (일) 15:00" oninput="renderInstaCard()"/>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">브랜드 문구</span>
+          <input class="inp-field" id="card-brand" value="TEUM PARTY · 참가자 명단" oninput="renderInstaCard()"/>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">인스타 계정</span>
+          <input class="inp-field" id="card-insta" value="@teum_party" oninput="renderInstaCard()"/>
+        </div>
+        <div style="height:0.5px;background:#eee;margin:10px 0;"></div>
+        <h3 style="margin-bottom:8px;">👥 참가자 선택</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#185FA5;margin-bottom:5px;">MAN</div>
+            <div id="select-men" style="display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto;"></div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#993556;margin-bottom:5px;">WOMAN</div>
+            <div id="select-women" style="display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto;"></div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#aaa;margin-bottom:10px;" id="select-count">선택: 남 0명 / 여 0명</div>
+        <div style="height:0.5px;background:#eee;margin:10px 0;"></div>
+        <h3 style="margin-bottom:8px;">✏️ 직접 수정</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#185FA5;margin-bottom:4px;">MAN</div>
+            <textarea id="edit-man" style="width:100%;height:140px;border:1.5px solid #e0e0e0;border-radius:8px;padding:6px 8px;font-size:11px;font-family:inherit;resize:none;line-height:1.8;outline:none;" oninput="renderInstaCard()"></textarea>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#993556;margin-bottom:4px;">WOMAN</div>
+            <textarea id="edit-woman" style="width:100%;height:140px;border:1.5px solid #e0e0e0;border-radius:8px;padding:6px 8px;font-size:11px;font-family:inherit;resize:none;line-height:1.8;outline:none;" oninput="renderInstaCard()"></textarea>
+          </div>
+        </div>
+        <div class="page-nav">
+          <button class="page-btn" onclick="changePage(-1)">‹</button>
+          <span class="page-info" id="page-info">1 / 1 페이지</span>
+          <button class="page-btn" onclick="changePage(1)">›</button>
+        </div>
+        <button class="save-btn" onclick="saveInstaCard()">📸 이미지 저장</button>
+      </div>
+      <div class="card-preview">
+        <div class="insta-card" id="insta-card">
+          <div class="ic-corner tl"></div><div class="ic-corner tr"></div>
+          <div class="ic-corner bl"></div><div class="ic-corner br"></div>
+          <div class="ic-inner">
+            <div class="ic-brand" id="ic-brand">TEUM PARTY · 참가자 명단</div>
+            <div class="ic-date" id="ic-date">5 / 31 (일) 15:00</div>
+            <div class="ic-divider"><div class="ic-divider-line"></div><div class="ic-diamond"></div><div class="ic-divider-line"></div></div>
+            <div class="ic-cols">
+              <div class="ic-col"><div class="ic-col-header">MAN</div><div id="ic-man"></div></div>
+              <div class="ic-col"><div class="ic-col-header">WOMAN</div><div id="ic-woman"></div></div>
+            </div>
+            <div class="ic-divider"><div class="ic-divider-line"></div><div class="ic-diamond"></div><div class="ic-divider-line"></div></div>
+            <div class="ic-footer" id="ic-footer">@teum_party</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('modal-bg').classList.remove('open')">×</button>
+    <div id="modal-inner"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwgr8XHuSe6VNwukcasegsOv7sbL6hS2DF7ZaORBt3qf-fcBgFe9yH9ZFHDOZanUFhjSw/exec';
-let selectedTags=[], selectedMbti='';
-const tagOptions=['#다정함','#섹시함','#착함','#유머있음','#차분함','#활발함','#지적임','#츤데레','#엉뚱함','#감성적','#도도함','#귀여움','#털털함','#듬직함','#솔직함','#쿨함','#기타'];
-const mbtiList=['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'];
+const PER_PAGE=7;
+const AVATAR_COLORS=[
+  {bg:'#E6F1FB',text:'#185FA5'},{bg:'#fce4ec',text:'#993556'},
+  {bg:'#e8f5e9',text:'#2e7d32'},{bg:'#f3e5f5',text:'#6a1b9a'},
+  {bg:'#fff3e0',text:'#e65100'},{bg:'#e0f7fa',text:'#00695c'},
+];
 
-(function(){
-  const ySel=document.getElementById('year');
-  for(let y=2007;y>=1992;y--){const o=document.createElement('option');o.value=y;o.textContent=y+'년';ySel.appendChild(o);}
-  const hSel=document.getElementById('height');
-  for(let h=150;h<=190;h++){const o=document.createElement('option');o.value=h;o.textContent=h+'cm';hSel.appendChild(o);}
-})();
+let allData=[], partyDates=[];
+let filters={gender:'전체',status:'전체',date:'전체'};
+let currentModalId=null;
+let selectedMen=[], selectedWomen=[];
+let cardPage=0;
 
-// 파티 날짜 목록 불러오기
-fetch(SCRIPT_URL).then(r=>r.json()).then(res=>{
-  const dates=(res.dates||[]);
-  const sel=document.getElementById('party-date');
-  if(dates.length===0){
-    const o=document.createElement('option');
-    o.value='미정';o.textContent='날짜 미정';
-    sel.appendChild(o);
-  } else {
-    dates.forEach(d=>{
-      const o=document.createElement('option');
-      o.value=d;o.textContent=d;
-      sel.appendChild(o);
+// ── 탭 전환 ──
+function switchTab(idx,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab'+idx).classList.add('active');
+  document.getElementById('main-refresh').style.display=idx===0?'':'none';
+}
+
+// ── 데이터 로드 ──
+function loadData(){
+  document.getElementById('grid').innerHTML='<div class="loading">데이터 불러오는 중... 🩷</div>';
+  fetch(SCRIPT_URL)
+    .then(r=>r.json())
+    .then(res=>{
+      if(Array.isArray(res)){allData=res;partyDates=[];}
+      else{allData=res.data||[];partyDates=res.dates||[];}
+      updateStats();
+      renderCards();
+      buildSelectLists();
+      renderDateFilterPills();
+      renderDateTagList();
+    })
+    .catch(()=>{
+      document.getElementById('grid').innerHTML='<div class="empty">데이터를 불러오지 못했어요 😢</div>';
     });
-  }
-}).catch(()=>{
-  const o=document.createElement('option');
-  o.value='미정';o.textContent='날짜 미정';
-  document.getElementById('party-date').appendChild(o);
-});
+}
 
-document.getElementById('tags-grid').innerHTML=tagOptions.map(t=>`<button class="tag-btn" onclick="toggleTag(this,'${t}')">${t}</button>`).join('');
-document.getElementById('mbti-grid').innerHTML=mbtiList.map(m=>`<button class="mbti-btn" onclick="selectMbti(this,'${m}')">${m}</button>`).join('');
+// ── 통계 ──
+function updateStats(){
+  const mCnt=allData.filter(d=>d['성별']==='남성').length;
+  const fCnt=allData.filter(d=>d['성별']==='여성').length;
+  const mApp=allData.filter(d=>d['성별']==='남성'&&d['상태']==='승인').length;
+  const fApp=allData.filter(d=>d['성별']==='여성'&&d['상태']==='승인').length;
+  document.getElementById('cnt-total').textContent=allData.length;
+  document.getElementById('cnt-m').textContent=mCnt;
+  document.getElementById('cnt-f').textContent=fCnt;
+  document.getElementById('cnt-review').textContent=allData.filter(d=>!d['상태']||d['상태']==='검토중').length;
+  document.getElementById('cnt-approved').textContent=mApp+fApp;
+  document.getElementById('cnt-approved-m').textContent=mApp;
+  document.getElementById('cnt-approved-f').textContent=fApp;
+  document.getElementById('cnt-rejected').textContent=allData.filter(d=>d['상태']==='탈락').length;
+}
 
-function toggleTag(el,tag){
-  if(tag==='#기타'){
-    const already=el.classList.contains('selected');
-    el.classList.toggle('selected');
-    const inp=document.getElementById('other-tag-input');
-    if(!already){inp.classList.add('show');inp.focus();}
-    else inp.classList.remove('show');
-    updateTagCount(); return;
-  }
-  if(el.classList.contains('selected')){
-    el.classList.remove('selected');
-    selectedTags=selectedTags.filter(t=>t!==tag);
+// ── 필터 ──
+function setFilter(key,val,el){
+  filters[key]=val;
+  const scope=key==='date'?'#date-filter-pills':'';
+  if(scope){
+    document.querySelectorAll(scope+' .pill').forEach(b=>b.classList.remove('active'));
   } else {
-    const otherOn=document.getElementById('other-tag-input').classList.contains('show')?1:0;
-    if(selectedTags.length>=(3-otherOn)){alert('최대 3개까지 선택할 수 있어요');return;}
-    el.classList.add('selected'); selectedTags.push(tag);
+    el.closest('.filters').querySelectorAll('[onclick*="\''+key+'\'"]').forEach(b=>b.classList.remove('active'));
   }
-  updateTagCount();
+  el.classList.add('active');
+  renderCards();
 }
-function updateTagCount(){
-  const otherOn=document.getElementById('other-tag-input').classList.contains('show')?1:0;
-  document.getElementById('tag-count').textContent=(selectedTags.length+otherOn)+' / 3개 선택';
-}
-function selectMbti(el,m){
-  document.querySelectorAll('.mbti-btn').forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected'); selectedMbti=m;
-}
-function showErr(id,show){const el=document.getElementById(id);if(el)el.classList.toggle('show',show);}
 
-function setStep(n){
-  document.querySelectorAll('.step').forEach((s,i)=>s.classList.toggle('active',i===n));
-  [0,1,2].forEach(i=>{
-    const st=document.getElementById('st'+i);
-    if(!st)return;
-    st.classList.toggle('on',i===n);
-    st.classList.toggle('done',i<n);
-    st.querySelector('.st-dot').textContent=i<n?'✓':(i+1);
+function renderDateFilterPills(){
+  const container=document.getElementById('date-filter-pills');
+  container.innerHTML='<button class="pill '+(filters.date==='전체'?'active':'')+'" onclick="setFilter(\'date\',\'전체\',this)">전체</button>';
+  partyDates.forEach(d=>{
+    const btn=document.createElement('button');
+    btn.className='pill'+(filters.date===d?' active':'');
+    btn.textContent=d;
+    btn.onclick=function(){setFilter('date',d,this);};
+    container.appendChild(btn);
   });
-  [0,1].forEach(i=>{const sl=document.getElementById('sl'+i);if(sl)sl.classList.toggle('done',i<n);});
-  if(n===2)updatePreview();
-  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function next(cur){
-  if(cur===0){
-    const name=document.getElementById('name').value.trim();
-    const g=document.getElementById('gender-sel').value;
-    const yr=document.getElementById('year').value;
-    const h=document.getElementById('height').value;
-    const job=document.getElementById('job').value.trim();
-    const phone=document.getElementById('phone').value.trim();
-    const partyDate=document.getElementById('party-date').value;
-    const insta=document.getElementById('insta').value.trim();
-    let ok=true;
-    if(!partyDate){showErr('err-partydate',true);ok=false;}else showErr('err-partydate',false);
-    if(!name||name.length<2){showErr('err-name',true);ok=false;}else showErr('err-name',false);
-    if(!g){showErr('err-gender',true);ok=false;}else showErr('err-gender',false);
-    if(!yr){showErr('err-year',true);ok=false;}else showErr('err-year',false);
-    if(!h){showErr('err-height',true);ok=false;}else showErr('err-height',false);
-    if(!job){showErr('err-job',true);ok=false;}else showErr('err-job',false);
-    if(!phone||phone.length<9){showErr('err-phone',true);ok=false;}else showErr('err-phone',false);
-    if(!insta){showErr('err-insta',true);ok=false;}else showErr('err-insta',false);
-    if(!ok)return;
-  }
-  if(cur===1){
-    const otherOn=document.getElementById('other-tag-input').classList.contains('show');
-    const otherVal=document.getElementById('other-tag-input').value.trim();
-    const total=selectedTags.length+(otherOn&&otherVal?1:0);
-    if(total===0){showErr('err-tags',true);return;} showErr('err-tags',false);
-    if(!selectedMbti){showErr('err-mbti',true);return;} showErr('err-mbti',false);
-  }
-  setStep(cur+1);
-}
-function back(cur){setStep(cur-1);}
-function getKorAge(yr){return (2026-parseInt(yr)+1)+'살';}
-
-function updatePreview(){
-  const yr=document.getElementById('year').value;
-  const g=document.getElementById('gender-sel').value;
-  const otherOn=document.getElementById('other-tag-input').classList.contains('show');
-  const otherVal=document.getElementById('other-tag-input').value.trim();
-  let finalTags=[...selectedTags];
-  if(otherOn&&otherVal)finalTags.push(otherVal);
-  const rows=[
-    ['파티 날짜',document.getElementById('party-date').value||'—'],
-    ['이름',document.getElementById('name').value||'—'],
-    ['성별',g?g+'성':'—'],
-    ['나이',yr?yr+'년생 ('+getKorAge(yr)+')':'—'],
-    ['키',(document.getElementById('height').value||'—')+'cm'],
-    ['직업',document.getElementById('job').value||'—'],
-    ['연락처',document.getElementById('phone').value||'—'],
-    ['인스타',document.getElementById('insta').value||'—'],
-    ['닮은꼴',document.getElementById('look').value||'—'],
-    ['성격',finalTags.join(' ')||'—'],
-    ['MBTI',selectedMbti||'—'],
-  ];
-  document.getElementById('preview').innerHTML=rows.map(r=>`
-    <div class="preview-row"><span class="preview-key">${r[0]}</span><span class="preview-val">${r[1]}</span></div>
-  `).join('');
+// ── 카드 렌더 ──
+function renderCards(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const filtered=allData.filter(d=>{
+    if(filters.gender!=='전체'&&d['성별']!==filters.gender)return false;
+    const s=d['상태']||'검토중';
+    if(filters.status!=='전체'&&s!==filters.status)return false;
+    if(filters.date!=='전체'&&(d['파티날짜']||'미선택')!==filters.date)return false;
+    if(q&&!JSON.stringify(d).toLowerCase().includes(q))return false;
+    return true;
+  });
+  const grid=document.getElementById('grid');
+  if(!filtered.length){grid.innerHTML='<div class="empty">해당하는 신청자가 없어요</div>';return;}
+  grid.innerHTML='';
+  filtered.forEach((d,i)=>{
+    const isMale=d['성별']==='남성';
+    const status=d['상태']||'검토중';
+    const isNew=new Date(d['신청일시']).toLocaleDateString('ko-KR')===new Date().toLocaleDateString('ko-KR');
+    const avatarBg=isMale?'#E6F1FB':'#fce4ec';
+    const avatarColor=isMale?'#185FA5':'#993556';
+    const card=document.createElement('div');
+    card.className='card'+(status==='승인'?' approved':status==='탈락'?' rejected':'');
+    card.onclick=()=>openModal(d,AVATAR_COLORS[i%AVATAR_COLORS.length]);
+    card.innerHTML=`
+      <div class="card-body">
+        <div class="card-name-row">
+          <input type="checkbox" class="card-check" data-id="${d['신청번호']}" onclick="event.stopPropagation()" style="accent-color:#e91e8c;cursor:pointer;flex-shrink:0;"/>
+          <div class="card-avatar" style="background:${avatarBg};color:${avatarColor}">${isMale?'남':'여'}</div>
+          <div class="card-name">${d['이름']||'—'}${isNew?'<span class="badge-new">NEW</span>':''}</div>
+          <span class="status-badge ${status}" style="margin-left:auto;">${status}</span>
+        </div>
+        <div class="card-sub">${d['나이']||''} · ${d['키']||''} · ${d['직업']||''}</div>
+        <div class="card-divider"></div>
+        <div class="card-detail">
+          <div class="card-row-left"><span class="cd-key">닮은꼴</span><span class="tag ${isMale?'tag-m':'tag-f'}">${d['닮은꼴']||'—'}</span></div>
+          <div class="card-row-left"><span class="cd-key">MBTI</span><span class="tag tag-mbti">${d['MBTI']||'—'}</span></div>
+          <div class="card-row-left"><span class="cd-key">태그</span><div style="display:flex;gap:3px;overflow:hidden;">${(d['성격']||'').split(' ').filter(Boolean).map(t=>'<span class="tag tag-hashtag" style="font-size:10px;padding:2px 6px;">'+t+'</span>').join('')||'—'}</div></div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
 }
 
-function submitForm(){
-  const yr=document.getElementById('year').value;
-  const g=document.getElementById('gender-sel').value;
-  const otherOn=document.getElementById('other-tag-input').classList.contains('show');
-  const otherVal=document.getElementById('other-tag-input').value.trim();
-  let finalTags=[...selectedTags];
-  if(otherOn&&otherVal)finalTags.push(otherVal);
-  const id='TEUM'+Date.now().toString().slice(-6);
+// ── 모달 ──
+function openModal(d,c){
+  currentModalId=d['신청번호'];
+  const status=d['상태']||'검토중';
+  const tags=(d['성격']||'').split(' ').filter(Boolean);
+  document.getElementById('modal-inner').innerHTML=`
+    <div class="modal-top">
+      <div class="modal-avatar" style="background:${c.bg};color:${c.text}">${d['성별']==='남성'?'남':'여'}</div>
+      <div class="modal-name">${d['이름']||'—'}</div>
+      <div class="modal-sub">${d['직업']||''} · ${d['MBTI']||''}</div>
+    </div>
+    <div class="modal-content">
+      <div class="mdivider"></div>
+      <div class="info-grid">
+        <div class="info-item"><div class="info-key">성별</div><div class="info-val">${d['성별']||'—'}</div></div>
+        <div class="info-item"><div class="info-key">나이</div><div class="info-val">${d['나이']||'—'}</div></div>
+        <div class="info-item"><div class="info-key">키</div><div class="info-val">${d['키']||'—'}</div></div>
+        <div class="info-item"><div class="info-key">닮은꼴</div><div class="info-val">${d['닮은꼴']||'—'}</div></div>
+        <div class="info-item"><div class="info-key">연락처</div><div class="info-val">${String(d['연락처']||'—').replace(/^'/,'')}</div></div>
+        <div class="info-item"><div class="info-key">인스타</div><div class="info-val">${d['인스타']?'<a class="insta-link" href="https://instagram.com/'+d['인스타'].replace('@','')+'" target="_blank">'+d['인스타']+'</a>':'—'}</div></div>
+        <div class="info-item" style="grid-column:1/-1"><div class="info-key">파티 날짜</div><div class="info-val">${d['파티날짜']||'—'}</div></div>
+      </div>
+      <div class="info-full">
+        <div class="info-key">성격 태그</div>
+        <div class="tags-row">${tags.map(t=>'<span class="ptag">'+t+'</span>').join('')||'—'}</div>
+      </div>
+      <div class="mdivider"></div>
+      <div style="font-size:13px;font-weight:700;color:#333;margin-bottom:8px;">승인 여부</div>
+      <div class="status-row">
+        <button class="btn-approve ${status==='승인'?'active':''}" id="btn-approve" onclick="updateStatus('승인')">✅ 승인</button>
+        <button class="btn-reject ${status==='탈락'?'active':''}" id="btn-reject" onclick="updateStatus('탈락')">❌ 탈락</button>
+      </div>
+      <button class="btn-reset" onclick="updateStatus('검토중')">↩ 검토중으로 되돌리기</button>
+      <div class="saving" id="saving">저장 중...</div>
+    </div>`;
+  document.getElementById('modal-bg').classList.add('open');
+}
 
-  const payload={
-    id, name:document.getElementById('name').value,
-    gender:g+'성', year:yr+'년생', age:getKorAge(yr),
-    height:document.getElementById('height').value+'cm',
-    job:document.getElementById('job').value,
-    phone:"'" + document.getElementById('phone').value,
-    insta:document.getElementById('insta').value,
-    look:document.getElementById('look').value||'—',
-    tags:finalTags.join(' ')||'—', mbti:selectedMbti
+function updateStatus(status){
+  if(!currentModalId)return;
+  document.getElementById('saving').classList.add('show');
+  document.getElementById('saving').textContent='저장 중...';
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'updateStatus',id:currentModalId,status})
+  }).then(()=>{
+    const idx=allData.findIndex(d=>d['신청번호']===currentModalId);
+    if(idx>-1)allData[idx]['상태']=status;
+    document.getElementById('saving').textContent='✅ 저장됨!';
+    setTimeout(()=>{
+      document.getElementById('saving').classList.remove('show');
+      document.getElementById('modal-bg').classList.remove('open');
+      updateStats();renderCards();
+    },800);
+    const ba=document.getElementById('btn-approve');
+    const br=document.getElementById('btn-reject');
+    if(ba)ba.classList.toggle('active',status==='승인');
+    if(br)br.classList.toggle('active',status==='탈락');
+  }).catch(()=>{document.getElementById('saving').textContent='저장 실패 😢';});
+}
+
+function closeModal(e){if(e.target===document.getElementById('modal-bg'))document.getElementById('modal-bg').classList.remove('open');}
+
+// ── 삭제 ──
+function deleteSelected(){
+  const checked=[...document.querySelectorAll('.card-check:checked')].map(cb=>cb.dataset.id);
+  if(!checked.length){alert('삭제할 신청자를 선택해 주세요');return;}
+  if(!confirm(checked.length+'명을 삭제할까요? 복구가 불가능해요.'))return;
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'deleteRows',ids:checked})
+  });
+  allData=allData.filter(d=>!checked.includes(String(d['신청번호'])));
+  updateStats();renderCards();
+}
+
+// ── 날짜 관리 ──
+function toggleDateManager(){
+  const p=document.getElementById('date-manager-panel');
+  p.classList.toggle('open');
+}
+
+function renderDateTagList(){
+  const el=document.getElementById('date-tag-list');
+  if(!el)return;
+  el.innerHTML=partyDates.map(d=>`
+    <div style="display:flex;align-items:center;gap:4px;background:#fff0f8;border:1px solid #f8bbd0;border-radius:999px;padding:4px 12px;font-size:12px;color:#c2185b;">
+      ${d}
+      <button onclick="removePartyDate('${d}')" style="background:none;border:none;color:#f48fb1;cursor:pointer;font-size:15px;line-height:1;margin-left:2px;">×</button>
+    </div>`).join('');
+}
+
+function addPartyDate(){
+  const val=document.getElementById('new-date-input').value.trim();
+  if(!val)return;
+  if(partyDates.includes(val)){alert('이미 있는 날짜예요');return;}
+  partyDates.push(val);
+  saveDates();
+  document.getElementById('new-date-input').value='';
+}
+
+function removePartyDate(d){
+  if(!confirm(d+' 날짜를 삭제할까요?'))return;
+  partyDates=partyDates.filter(x=>x!==d);
+  saveDates();
+}
+
+function saveDates(){
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'updateDates',dates:partyDates})
+  });
+  renderDateFilterPills();
+  renderDateTagList();
+}
+
+// ── 명단 카드 ──
+function buildSelectLists(){
+  const approved=allData.filter(d=>d['상태']==='승인');
+  const men=approved.filter(d=>d['성별']==='남성');
+  const women=approved.filter(d=>d['성별']==='여성');
+  selectedMen=[];selectedWomen=[];
+
+  const renderSel=(list,el,gender)=>{
+    el.innerHTML='';
+    if(!list.length){el.innerHTML='<div style="font-size:11px;color:#bbb;">승인된 '+gender+' 없음</div>';return;}
+    list.forEach((d,i)=>{
+      const yr=d['연도']?d['연도'].replace('년생',''):'?';
+      const ht=d['키']?d['키'].replace('cm','')+'cm':'?';
+      const label=yr+' / '+ht+' / '+(d['직업']||'?');
+      const row=document.createElement('label');
+      row.style.cssText='display:flex;align-items:center;gap:5px;font-size:11px;color:#333;cursor:pointer;padding:3px 6px;border-radius:6px;border:1px solid #eee;background:#fff;';
+      const cb=document.createElement('input');
+      cb.type='checkbox';
+      cb.style.accentColor='#e91e8c';
+      cb.dataset.idx=i;
+      cb.dataset.gender=gender;
+      cb.addEventListener('change',()=>onSelectChange(men,women));
+      row.appendChild(cb);
+      row.appendChild(document.createTextNode(label));
+      el.appendChild(row);
+    });
   };
-
-  document.getElementById('apply-id').textContent='신청 번호 '+id;
-  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
-  document.getElementById('s-done').classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-
-  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
-    .catch(err=>console.error('전송 실패:',err));
+  renderSel(men,document.getElementById('select-men'),'남');
+  renderSel(women,document.getElementById('select-women'),'여');
+  updateSelectCount();
+  syncTextareas(men,women);
 }
+
+function onSelectChange(men,women){
+  selectedMen=[];selectedWomen=[];
+  document.querySelectorAll('#select-men input:checked').forEach(cb=>{selectedMen.push(men[parseInt(cb.dataset.idx)]);});
+  document.querySelectorAll('#select-women input:checked').forEach(cb=>{selectedWomen.push(women[parseInt(cb.dataset.idx)]);});
+  updateSelectCount();
+  syncTextareas(men,women);
+  renderInstaCard();
+}
+
+function updateSelectCount(){
+  document.getElementById('select-count').textContent='선택: 남 '+selectedMen.length+'명 / 여 '+selectedWomen.length+'명';
+}
+
+function syncTextareas(men,women){
+  const fmt=d=>{
+    const yr=d['연도']?d['연도'].replace('년생',''):'?';
+    const ht=d['키']?d['키'].replace('cm',''):'?';
+    return yr+' / '+ht+' / '+(d['직업']||'?');
+  };
+  const pad=arr=>{const lines=arr.map(fmt);while(lines.length<PER_PAGE)lines.push('');return lines.slice(0,PER_PAGE).join('\n');};
+  document.getElementById('edit-man').value=pad(selectedMen);
+  document.getElementById('edit-woman').value=pad(selectedWomen);
+}
+
+function changePage(dir){
+  const total=Math.max(Math.ceil(selectedMen.length/PER_PAGE),Math.ceil(selectedWomen.length/PER_PAGE),1);
+  cardPage=Math.max(0,Math.min(cardPage+dir,total-1));
+  renderInstaCard();
+}
+
+function renderInstaCard(){
+  document.getElementById('ic-date').textContent=document.getElementById('card-date').value;
+  document.getElementById('ic-brand').textContent=document.getElementById('card-brand').value;
+  document.getElementById('ic-footer').textContent=document.getElementById('card-insta').value;
+  const manLines=document.getElementById('edit-man').value.split('\n');
+  const womanLines=document.getElementById('edit-woman').value.split('\n');
+  const renderLines=(lines,el)=>{
+    el.innerHTML='';
+    for(let i=0;i<PER_PAGE;i++){
+      const div=document.createElement('div');
+      div.className='ic-person';
+      const txt=(lines[i]||'').trim();
+      div.textContent=txt||'\u00a0';
+      if(!txt)div.style.opacity='0';
+      el.appendChild(div);
+    }
+  };
+  renderLines(manLines,document.getElementById('ic-man'));
+  renderLines(womanLines,document.getElementById('ic-woman'));
+  const total=Math.max(Math.ceil(selectedMen.length/PER_PAGE),Math.ceil(selectedWomen.length/PER_PAGE),1);
+  document.getElementById('page-info').textContent=(cardPage+1)+' / '+total+' 페이지';
+}
+
+function saveInstaCard(){
+  renderInstaCard();
+  setTimeout(()=>{
+    html2canvas(document.getElementById('insta-card'),{scale:3,backgroundColor:'#0d0d0d',useCORS:true,logging:false})
+      .then(canvas=>{
+        const link=document.createElement('a');
+        link.download='틈파티_명단_'+(cardPage+1)+'페이지.png';
+        link.href=canvas.toDataURL('image/png');
+        link.click();
+      });
+  },150);
+}
+
+loadData();
+renderInstaCard();
 </script>
 </body>
 </html>
