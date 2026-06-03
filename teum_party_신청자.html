@@ -92,6 +92,13 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;}
   <!-- STEP 1: 기본 정보 -->
   <div class="step active" id="s0">
     <div class="field">
+      <label>참가 파티 날짜 <span class="req">*</span></label>
+      <div class="select-wrap">
+        <select id="party-date"><option value="">날짜를 선택해 주세요</option></select>
+      </div>
+      <span class="err" id="err-partydate">참가 날짜를 선택해 주세요</span>
+    </div>
+    <div class="field">
       <label>이름 <span class="req">*</span></label>
       <input id="name" type="text" placeholder="실명으로 꼭 작성해 주세요"/>
       <span class="hint">닉네임 사용 시 신청이 취소될 수 있어요</span>
@@ -179,7 +186,7 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;}
 </div>
 
 <script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbw0ACr7xUO7UdraMIj-M7eRD3lt3UrGvVmYndNzT2xNg1qKVq-LJ-FUuut57i6S92ZBwg/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwgr8XHuSe6VNwukcasegsOv7sbL6hS2DF7ZaORBt3qf-fcBgFe9yH9ZFHDOZanUFhjSw/exec';
 let selectedTags=[], selectedMbti='';
 const tagOptions=['#다정함','#섹시함','#착함','#유머있음','#차분함','#활발함','#지적임','#츤데레','#엉뚱함','#감성적','#도도함','#귀여움','#털털함','#듬직함','#솔직함','#쿨함','#기타'];
 const mbtiList=['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'];
@@ -190,6 +197,27 @@ const mbtiList=['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','
   const hSel=document.getElementById('height');
   for(let h=150;h<=190;h++){const o=document.createElement('option');o.value=h;o.textContent=h+'cm';hSel.appendChild(o);}
 })();
+
+// 파티 날짜 목록 불러오기
+fetch(SCRIPT_URL).then(r=>r.json()).then(res=>{
+  const dates=(res.dates||[]);
+  const sel=document.getElementById('party-date');
+  if(dates.length===0){
+    const o=document.createElement('option');
+    o.value='미정';o.textContent='날짜 미정';
+    sel.appendChild(o);
+  } else {
+    dates.forEach(d=>{
+      const o=document.createElement('option');
+      o.value=d;o.textContent=d;
+      sel.appendChild(o);
+    });
+  }
+}).catch(()=>{
+  const o=document.createElement('option');
+  o.value='미정';o.textContent='날짜 미정';
+  document.getElementById('party-date').appendChild(o);
+});
 
 document.getElementById('tags-grid').innerHTML=tagOptions.map(t=>`<button class="tag-btn" onclick="toggleTag(this,'${t}')">${t}</button>`).join('');
 document.getElementById('mbti-grid').innerHTML=mbtiList.map(m=>`<button class="mbti-btn" onclick="selectMbti(this,'${m}')">${m}</button>`).join('');
@@ -245,8 +273,10 @@ function next(cur){
     const h=document.getElementById('height').value;
     const job=document.getElementById('job').value.trim();
     const phone=document.getElementById('phone').value.trim();
+    const partyDate=document.getElementById('party-date').value;
     const insta=document.getElementById('insta').value.trim();
     let ok=true;
+    if(!partyDate){showErr('err-partydate',true);ok=false;}else showErr('err-partydate',false);
     if(!name||name.length<2){showErr('err-name',true);ok=false;}else showErr('err-name',false);
     if(!g){showErr('err-gender',true);ok=false;}else showErr('err-gender',false);
     if(!yr){showErr('err-year',true);ok=false;}else showErr('err-year',false);
@@ -276,6 +306,7 @@ function updatePreview(){
   let finalTags=[...selectedTags];
   if(otherOn&&otherVal)finalTags.push(otherVal);
   const rows=[
+    ['파티 날짜',document.getElementById('party-date').value||'—'],
     ['이름',document.getElementById('name').value||'—'],
     ['성별',g?g+'성':'—'],
     ['나이',yr?yr+'년생 ('+getKorAge(yr)+')':'—'],
