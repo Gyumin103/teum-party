@@ -347,7 +347,8 @@ function submitForm(){
     phone:"'" + document.getElementById('phone').value,
     insta:document.getElementById('insta').value,
     look:document.getElementById('look').value||'—',
-    tags:finalTags.join(' ')||'—', mbti:selectedMbti
+    tags:finalTags.join(' ')||'—', mbti:selectedMbti,
+    partyDate:document.getElementById('party-date').value||'미선택'
   };
 
   document.getElementById('apply-id').textContent='신청 번호 '+id;
