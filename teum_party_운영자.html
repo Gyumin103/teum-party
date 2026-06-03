@@ -162,6 +162,7 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
   <div class="tabs">
     <div class="tab active" onclick="switchTab(0,this)">📋 신청자 관리</div>
     <div class="tab" onclick="switchTab(1,this)">📣 홍보 명단 카드</div>
+    <div class="tab" onclick="switchTab(2,this)">📁 지난 파티</div>
   </div>
 
   <!-- 탭1 -->
@@ -285,6 +286,12 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
       </div>
     </div>
   </div>
+  </div>
+
+  <!-- 탭3: 지난 파티 -->
+  <div class="tab-content" id="tab2">
+    <div id="past-party-list" style="display:flex;flex-direction:column;gap:1rem;"></div>
+  </div>
 </div>
 
 <div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
@@ -296,6 +303,11 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+function parsePartyDate(str){
+  const m=String(str).match(/(\d{4})\s+(\d{1,2})\/(\d{1,2})/);
+  if(!m)return null;
+  return new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3]));
+}
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwgr8XHuSe6VNwukcasegsOv7sbL6hS2DF7ZaORBt3qf-fcBgFe9yH9ZFHDOZanUFhjSw/exec';
 const PER_PAGE=7;
 const AVATAR_COLORS=[
@@ -317,6 +329,7 @@ function switchTab(idx,el){
   el.classList.add('active');
   document.getElementById('tab'+idx).classList.add('active');
   document.getElementById('main-refresh').style.display=idx===0?'':'none';
+  if(idx===2)renderPastParties();
 }
 
 // ── 데이터 로드 ──
@@ -480,6 +493,88 @@ function updateStatus(status){
     if(ba)ba.classList.toggle('active',status==='승인');
     if(br)br.classList.toggle('active',status==='탈락');
   }).catch(()=>{document.getElementById('saving').textContent='저장 실패 😢';});
+}
+
+function renderPastParties(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const pastDates=partyDates.filter(d=>{
+    const dt=parsePartyDate(d);
+    return dt&&dt<today;
+  }).sort((a,b)=>{
+    const da=parsePartyDate(a),db=parsePartyDate(b);
+    return db-da; // 최신순
+  });
+
+  const el=document.getElementById('past-party-list');
+  if(!pastDates.length){
+    el.innerHTML='<div style="text-align:center;padding:3rem;color:#bbb;font-size:14px;">아직 지난 파티가 없어요</div>';
+    return;
+  }
+
+  el.innerHTML='';
+  pastDates.forEach(date=>{
+    const members=allData.filter(d=>d['파티날짜']===date);
+    const total=members.length;
+    const men=members.filter(d=>d['성별']==='남성').length;
+    const women=members.filter(d=>d['성별']==='여성').length;
+    const review=members.filter(d=>!d['상태']||d['상태']==='검토중').length;
+    const approved=members.filter(d=>d['상태']==='승인').length;
+    const rejected=members.filter(d=>d['상태']==='탈락').length;
+
+    const section=document.createElement('div');
+    section.style.cssText='background:#fff;border:1px solid #fce4ec;border-radius:16px;overflow:hidden;';
+
+    // 헤더
+    const header=document.createElement('div');
+    header.style.cssText='padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid #fce4ec;';
+    header.innerHTML=`
+      <div>
+        <span style="font-size:15px;font-weight:700;color:#1a1a1a;">📅 ${date}</span>
+        <span style="font-size:12px;color:#888;margin-left:10px;">총 ${total}명 (남 ${men} / 여 ${women})</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <span style="font-size:12px;padding:3px 10px;border-radius:999px;background:#fff3e0;color:#e65100;border:1px solid #ffcc80;">검토중 ${review}</span>
+        <span style="font-size:12px;padding:3px 10px;border-radius:999px;background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;">승인 ${approved}</span>
+        <span style="font-size:12px;padding:3px 10px;border-radius:999px;background:#ffebee;color:#c62828;border:1px solid #ef9a9a;">탈락 ${rejected}</span>
+        <span style="font-size:13px;color:#bbb;" class="toggle-arrow">▼</span>
+      </div>`;
+
+    // 명단
+    const body=document.createElement('div');
+    body.style.cssText='display:none;padding:14px 18px;';
+    if(!members.length){
+      body.innerHTML='<div style="font-size:13px;color:#bbb;">해당 날짜 신청자 없음</div>';
+    } else {
+      body.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;">
+        ${members.map(d=>{
+          const isMale=d['성별']==='남성';
+          const status=d['상태']||'검토중';
+          const bg=isMale?'#E6F1FB':'#fce4ec';
+          const color=isMale?'#185FA5':'#993556';
+          const statusColor=status==='승인'?'#2e7d32':status==='탈락'?'#c62828':'#e65100';
+          const statusBg=status==='승인'?'#e8f5e9':status==='탈락'?'#ffebee':'#fff3e0';
+          return '<div style="background:#fafafa;border-radius:10px;padding:8px 10px;border:1px solid #eee;font-size:12px;">'
+            +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">'
+            +'<span style="width:24px;height:24px;border-radius:50%;background:'+bg+';color:'+color+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">'+(isMale?'남':'여')+'</span>'
+            +'<span style="font-weight:700;color:#1a1a1a;">'+d['이름']+'</span>'
+            +'<span style="margin-left:auto;font-size:10px;padding:1px 7px;border-radius:999px;background:'+statusBg+';color:'+statusColor+';">'+status+'</span>'
+            +'</div>'
+            +'<div style="color:#888;">'+d['나이']+' · '+d['키']+' · '+d['직업']+'</div>'
+            +'</div>';
+        }).join('')}
+      </div>`;
+    }
+
+    header.onclick=()=>{
+      const isOpen=body.style.display!=='none';
+      body.style.display=isOpen?'none':'block';
+      header.querySelector('.toggle-arrow').textContent=isOpen?'▼':'▲';
+    };
+
+    section.appendChild(header);
+    section.appendChild(body);
+    el.appendChild(section);
+  });
 }
 
 function closeModal(e){if(e.target===document.getElementById('modal-bg'))document.getElementById('modal-bg').classList.remove('open');}
