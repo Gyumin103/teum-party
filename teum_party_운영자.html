@@ -274,6 +274,7 @@ const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwgr8XHuSe6VNwukcasegs
 const PER_PAGE=7;
 const AC=[{bg:'#E6F1FB',text:'#185FA5'},{bg:'#fce4ec',text:'#993556'},{bg:'#e8f5e9',text:'#2e7d32'},{bg:'#f3e5f5',text:'#6a1b9a'},{bg:'#fff3e0',text:'#e65100'},{bg:'#e0f7fa',text:'#00695c'}];
 let allData=[],partyDates=[],filters={gender:'전체',status:'전체',date:'전체'};
+let checkOrderMen=[],checkOrderWomen=[];
 let currentModalId=null,selectedMen=[],selectedWomen=[],cardPage=0;
 
 function parseDate(str){const m=String(str).match(/(\d{4})\s+(\d{1,2})\/(\d{1,2})/);if(!m)return null;return new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3]));}
@@ -499,7 +500,7 @@ function buildSelectLists(){
   const approved=allData.filter(d=>d['상태']==='승인');
   const men=approved.filter(d=>d['성별']==='남성');
   const women=approved.filter(d=>d['성별']==='여성');
-  selectedMen=[];selectedWomen=[];
+  selectedMen=[];selectedWomen=[];checkOrderMen=[];checkOrderWomen=[];
   const mk=(list,el,g)=>{
     el.innerHTML='';
     if(!list.length){el.innerHTML='<div style="font-size:11px;color:#bbb;">승인된 '+g+' 없음</div>';return;}
@@ -510,7 +511,7 @@ function buildSelectLists(){
       row.style.cssText='display:flex;align-items:center;gap:5px;font-size:11px;color:#333;cursor:pointer;padding:3px 6px;border-radius:6px;border:1px solid #eee;background:#fff;';
       const cb=document.createElement('input');cb.type='checkbox';cb.style.accentColor='#e91e8c';cb.dataset.idx=i;cb.dataset.g=g;
       cb.addEventListener('change',()=>{
-        selectedMen=[];selectedWomen=[];
+        selectedMen=[];selectedWomen=[];checkOrderMen=[];checkOrderWomen=[];
         document.querySelectorAll('#select-men input:checked').forEach(c=>selectedMen.push(men[parseInt(c.dataset.idx)]));
         document.querySelectorAll('#select-women input:checked').forEach(c=>selectedWomen.push(women[parseInt(c.dataset.idx)]));
         document.getElementById('select-count').textContent='선택: 남 '+selectedMen.length+'명 / 여 '+selectedWomen.length+'명';
