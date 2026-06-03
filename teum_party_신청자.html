@@ -130,9 +130,9 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;}
     </div>
     <div class="field">
       <label>연락처 <span class="req">*</span></label>
-      <input id="phone" type="tel" placeholder="010-0000-0000"/>
+      <input id="phone" type="tel" placeholder="010-0000-0000" oninput="formatPhone(this)"/>
       <span class="hint">🔒 운영자에게만 공개돼요</span>
-      <span class="err" id="err-phone">연락처를 입력해 주세요</span>
+      <span class="err" id="err-phone">010-0000-0000 형식으로 입력해 주세요</span>
     </div>
     <div class="field">
       <label>인스타그램 계정 <span class="req">*</span></label>
@@ -219,6 +219,12 @@ fetch(SCRIPT_URL).then(r=>r.json()).then(res=>{
   document.getElementById('party-date').appendChild(o);
 });
 
+function formatPhone(el){
+  let v=el.value.replace(/[^0-9]/g,'');
+  if(v.length>3&&v.length<=7)v=v.slice(0,3)+'-'+v.slice(3);
+  else if(v.length>7)v=v.slice(0,3)+'-'+v.slice(3,7)+'-'+v.slice(7,11);
+  el.value=v;
+}
 document.getElementById('tags-grid').innerHTML=tagOptions.map(t=>`<button class="tag-btn" onclick="toggleTag(this,'${t}')">${t}</button>`).join('');
 document.getElementById('mbti-grid').innerHTML=mbtiList.map(m=>`<button class="mbti-btn" onclick="selectMbti(this,'${m}')">${m}</button>`).join('');
 
@@ -282,7 +288,8 @@ function next(cur){
     if(!yr){showErr('err-year',true);ok=false;}else showErr('err-year',false);
     if(!h){showErr('err-height',true);ok=false;}else showErr('err-height',false);
     if(!job){showErr('err-job',true);ok=false;}else showErr('err-job',false);
-    if(!phone||phone.length<9){showErr('err-phone',true);ok=false;}else showErr('err-phone',false);
+    const phoneReg=/^010-\d{4}-\d{4}$/;
+    if(!phoneReg.test(phone)){showErr('err-phone',true);ok=false;}else showErr('err-phone',false);
     if(!insta){showErr('err-insta',true);ok=false;}else showErr('err-insta',false);
     if(!ok)return;
   }
