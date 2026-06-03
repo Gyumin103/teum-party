@@ -569,10 +569,21 @@ function renderCard(){
 
 function saveCard(){
   renderCard();
+  const card=document.getElementById('insta-card');
+  // 잠깐 body에 복제해서 캡처
+  const clone=card.cloneNode(true);
+  clone.style.cssText='position:fixed;top:-9999px;left:-9999px;width:420px;z-index:-1;';
+  document.body.appendChild(clone);
   setTimeout(()=>{
-    html2canvas(document.getElementById('insta-card'),{scale:3,backgroundColor:'#0d0d0d',useCORS:true,logging:false})
-      .then(c=>{const a=document.createElement('a');a.download='틈파티_명단_'+(cardPage+1)+'페이지.png';a.href=c.toDataURL('image/png');a.click();});
-  },150);
+    html2canvas(clone,{scale:3,backgroundColor:'#0d0d0d',useCORS:true,logging:false,allowTaint:true})
+      .then(c=>{
+        document.body.removeChild(clone);
+        const a=document.createElement('a');
+        a.download='틈파티_명단_'+(cardPage+1)+'페이지.png';
+        a.href=c.toDataURL('image/png');
+        a.click();
+      }).catch(()=>{document.body.removeChild(clone);alert('저장 실패 😢 다시 시도해주세요');});
+  },300);
 }
 
 loadData();
