@@ -97,6 +97,32 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 .btn-delete-modal{width:100%;height:40px;border-radius:12px;border:1.5px solid #ef9a9a;background:#fff;color:#c62828;font-size:13px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;margin-top:8px;}
 .btn-delete-modal:hover{background:#ffebee;}
 .saving{text-align:center;font-size:12px;color:#e91e8c;margin-top:8px;display:none;}
+.r-section{background:#fff;border:1px solid #fce4ec;border-radius:16px;overflow:hidden;margin-bottom:14px;}
+.r-header{padding:14px 18px;border-bottom:1px solid #fce4ec;display:flex;align-items:center;justify-content:space-between;}
+.r-title{font-size:15px;font-weight:700;color:#1a1a1a;}
+.r-stats{display:flex;gap:10px;font-size:12px;}
+.r-body{padding:14px 18px;}
+.r-add{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;margin-bottom:12px;align-items:end;}
+.r-input{height:38px;border:1.5px solid #e0e0e0;border-radius:10px;padding:0 10px;font-size:13px;font-family:"Gmarket Sans",sans-serif;outline:none;width:100%;}
+.r-input:focus{border-color:#e91e8c;}
+.r-select{height:38px;border:1.5px solid #e0e0e0;border-radius:10px;padding:0 10px;font-size:13px;font-family:"Gmarket Sans",sans-serif;outline:none;width:100%;background:#fff;cursor:pointer;}
+.r-select:focus{border-color:#e91e8c;}
+.r-add-btn{height:38px;padding:0 16px;border-radius:10px;border:none;background:#e91e8c;color:#fff;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:"Gmarket Sans",sans-serif;}
+.r-table{width:100%;border-collapse:collapse;font-size:13px;}
+.r-table th{text-align:left;padding:8px 10px;font-size:11px;color:#999;font-weight:500;border-bottom:1px solid #f0f0f0;}
+.r-table td{padding:9px 10px;border-bottom:0.5px solid #f5f5f5;color:#1a1a1a;}
+.r-table tr:last-child td{border-bottom:none;}
+.r-table tr:hover td{background:#fafafa;}
+.price-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;font-weight:700;}
+.price-free{background:#e8f5e9;color:#2e7d32;}
+.price-discount{background:#fff3e0;color:#e65100;}
+.price-normal{background:#e3f2fd;color:#185FA5;}
+.platform-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:#f3f0ff;color:#5b21b6;font-weight:500;}
+.session-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:#fce4ec;color:#993556;font-weight:500;}
+.del-btn{background:none;border:none;color:#ddd;cursor:pointer;font-size:16px;padding:0 4px;}
+.del-btn:hover{color:#c62828;}
+.r-empty{text-align:center;padding:1.5rem;color:#bbb;font-size:13px;}
+.amount-input{width:80px;}
 .saving.show{display:block;}
 /* 탭2 */
 .card-editor{display:flex;gap:1.5rem;flex-wrap:wrap;}
@@ -150,8 +176,9 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 
   <div class="tabs">
     <div class="tab active" onclick="switchTab(0,this)">📋 신청자 관리</div>
-    <div class="tab" onclick="switchTab(1,this)">📣 홍보 명단 카드</div>
+    <div class="tab" onclick="switchTab(1,this)">👥 모객 현황</div>
     <div class="tab" onclick="switchTab(2,this)">📁 지난 파티</div>
+    <div class="tab" onclick="switchTab(3,this)">📣 홍보 명단 카드</div>
   </div>
 
   <!-- 탭1: 신청자 관리 -->
@@ -207,7 +234,7 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
   </div>
 
   <!-- 탭2: 홍보 명단 카드 -->
-  <div class="tab-content" id="tab1">
+  <div class="tab-content" id="tab3">
     <div class="card-editor">
       <div class="card-settings">
         <h3>⚙️ 카드 설정</h3>
@@ -255,6 +282,11 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
     </div>
   </div>
 
+  <!-- 탭2: 모객 현황 -->
+  <div class="tab-content" id="tab1">
+    <div id="recruit-wrap"></div>
+  </div>
+
   <!-- 탭3: 지난 파티 -->
   <div class="tab-content" id="tab2">
     <div id="past-list"></div>
@@ -270,10 +302,10 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwgr8XHuSe6VNwukcasegsOv7sbL6hS2DF7ZaORBt3qf-fcBgFe9yH9ZFHDOZanUFhjSw/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwfDfgsZCxa9tirPv4bPp4i4AIsLsZd7_dfj3UUBUDlslZsh9c6y-dP8d72j3ZkTrYynQ/exec';
 const PER_PAGE=7;
 const AC=[{bg:'#E6F1FB',text:'#185FA5'},{bg:'#fce4ec',text:'#993556'},{bg:'#e8f5e9',text:'#2e7d32'},{bg:'#f3e5f5',text:'#6a1b9a'},{bg:'#fff3e0',text:'#e65100'},{bg:'#e0f7fa',text:'#00695c'}];
-let allData=[],partyDates=[],filters={gender:'전체',status:'전체',date:'전체'};
+let allData=[],partyDates=[],recruitmentData=[],filters={gender:'전체',status:'전체',date:'전체'};
 let checkOrderMen=[],checkOrderWomen=[];
 let currentModalId=null,selectedMen=[],selectedWomen=[],cardPage=0;
 
@@ -285,7 +317,8 @@ function switchTab(idx,el){
   el.classList.add('active');
   document.getElementById('tab'+idx).classList.add('active');
   if(idx===2)renderPastParties();
-  if(idx===1){fillCardDateSelect();renderCard();}
+  if(idx===1)renderRecruitment();
+  if(idx===3){fillCardDateSelect();renderCard();}
 }
 
 function loadData(){
@@ -293,6 +326,7 @@ function loadData(){
   fetch(SCRIPT_URL).then(r=>r.json()).then(res=>{
     allData=Array.isArray(res)?res:(res.data||[]);
     partyDates=Array.isArray(res)?[]:(res.dates||[]);
+    recruitmentData=Array.isArray(res)?[]:(res.recruitment||[]);
     updateStats(allData);renderCards();buildSelectLists();renderDatePills();
   }).catch(()=>{document.getElementById('grid').innerHTML='<div class="empty">데이터를 불러오지 못했어요 😢</div>';});
 }
@@ -452,6 +486,118 @@ function addPartyDate(){
 }
 
 // 지난 파티
+function renderRecruitment(){
+  const wrap=document.getElementById('recruit-wrap');
+  if(!wrap)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const upcoming=[...partyDates].filter(d=>{const dt=parseDate(d);return dt&&dt>=today;})
+    .sort((a,b)=>parseDate(a)-parseDate(b));
+  const all=[...upcoming];
+  // 모객 있는 날짜 중 upcoming 아닌 것도 포함
+  recruitmentData.forEach(r=>{if(r['파티날짜']&&!all.includes(r['파티날짜']))all.push(r['파티날짜']);});
+  if(!all.length){wrap.innerHTML='<div style="text-align:center;padding:3rem;color:#bbb;font-size:14px;">등록된 파티 날짜가 없어요</div>';return;}
+  wrap.innerHTML='';
+  all.forEach(date=>{
+    const members=recruitmentData.filter(r=>r['파티날짜']===date);
+    const total=members.length;
+    const totalAmt=members.reduce((s,r)=>s+parseInt(r['금액']||0),0);
+    const sec=document.createElement('div');sec.className='r-section';
+    sec.innerHTML=`
+      <div class="r-header">
+        <div class="r-title">📅 ${date}</div>
+        <div class="r-stats">
+          <span style="color:#888;">총 <b style="color:#1a1a1a;">${total}명</b></span>
+          <span style="color:#888;">매출 <b style="color:#e91e8c;">${totalAmt.toLocaleString()}원</b></span>
+        </div>
+      </div>
+      <div class="r-body">
+        <div class="r-add">
+          <div><div style="font-size:11px;color:#888;margin-bottom:4px;">담당자</div>
+            <select class="r-select" id="rm-${date}">
+              <option value="김수민">김수민</option>
+              <option value="주태빈">주태빈</option>
+            </select></div>
+          <div><div style="font-size:11px;color:#888;margin-bottom:4px;">이름</div>
+            <input class="r-input" id="rn-${date}" placeholder="이름"/></div>
+          <div><div style="font-size:11px;color:#888;margin-bottom:4px;">플랫폼</div>
+            <select class="r-select" id="rp-${date}">
+              <option value="문토">문토</option>
+              <option value="인스타">인스타</option>
+              <option value="기타">기타</option>
+            </select></div>
+          <div><div style="font-size:11px;color:#888;margin-bottom:4px;">부</div>
+            <select class="r-select" id="rs-${date}">
+              <option value="1부">1부</option>
+              <option value="2부">2부</option>
+              <option value="1+2부">1+2부</option>
+            </select></div>
+          <div><div style="font-size:11px;color:#888;margin-bottom:4px;">가격</div>
+            <select class="r-select" id="rpr-${date}" onchange="toggleAmount('${date}')">
+              <option value="무료">무료</option>
+              <option value="할인가">할인가</option>
+              <option value="정상가">정상가</option>
+            </select></div>
+          <div id="ramt-wrap-${date}" style="display:none;"><div style="font-size:11px;color:#888;margin-bottom:4px;">금액</div>
+            <select class="r-select amount-input" id="ramt-${date}">
+              <option value="5000">5,000</option>
+              <option value="10000">10,000</option>
+              <option value="15000">15,000</option>
+              <option value="20000">20,000</option>
+              <option value="25000">25,000</option>
+              <option value="30000">30,000</option>
+            </select></div>
+          <div style="padding-top:20px;">
+            <button class="r-add-btn" onclick="addRecruitment('${date}')">+ 추가</button>
+          </div>
+        </div>
+        ${members.length?`<table class="r-table">
+          <tr><th>담당자</th><th>이름</th><th>플랫폼</th><th>부</th><th>가격</th><th></th></tr>
+          ${members.map(r=>{
+            const pc=r['가격']==='무료'?'price-free':r['가격']==='할인가'?'price-discount':'price-normal';
+            const priceLabel=r['가격']==='무료'?'무료':r['가격']+' '+parseInt(r['금액']||0).toLocaleString()+'원';
+            return '<tr>'
+              +'<td>'+r['담당자']+'</td>'
+              +'<td style="font-weight:500;">'+r['이름']+'</td>'
+              +'<td><span class="platform-tag">'+r['플랫폼']+'</span></td>'
+              +'<td><span class="session-tag">'+r['부']+'</span></td>'
+              +'<td><span class="price-tag '+pc+'">'+priceLabel+'</span></td>'
+              +'<td><button class="del-btn" onclick="deleteRecruitment(''+r['ID']+'')">×</button></td>'
+              +'</tr>';
+          }).join('')}
+        </table>`:'<div class="r-empty">아직 등록된 인원이 없어요</div>'}
+      </div>`;
+    wrap.appendChild(sec);
+  });
+}
+
+function toggleAmount(date){
+  const pr=document.getElementById('rpr-'+date).value;
+  const wrap=document.getElementById('ramt-wrap-'+date);
+  if(wrap)wrap.style.display=pr==='무료'?'none':'block';
+}
+
+function addRecruitment(date){
+  const manager=document.getElementById('rm-'+date).value;
+  const name=document.getElementById('rn-'+date).value.trim();
+  const platform=document.getElementById('rp-'+date).value;
+  const session=document.getElementById('rs-'+date).value;
+  const priceType=document.getElementById('rpr-'+date).value;
+  const amount=priceType==='무료'?0:parseInt(document.getElementById('ramt-'+date)?.value||0);
+  if(!name){alert('이름을 입력해 주세요');return;}
+  const rid='R'+Date.now();
+  const payload={action:'addRecruitment',rid,partyDate:date,manager,name,platform,session,priceType,amount};
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  recruitmentData.push({ID:rid,파티날짜:date,담당자:manager,이름:name,플랫폼:platform,부:session,가격:priceType,금액:amount});
+  renderRecruitment();
+}
+
+function deleteRecruitment(rid){
+  if(!confirm('삭제할까요?'))return;
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteRecruitment',rid:String(rid)})});
+  recruitmentData=recruitmentData.filter(r=>String(r['ID'])!==String(rid));
+  renderRecruitment();
+}
+
 function renderPastParties(){
   const today=new Date();today.setHours(0,0,0,0);
   const past=partyDates.filter(d=>{const dt=parseDate(d);return dt&&dt<today;}).sort((a,b)=>parseDate(b)-parseDate(a));
