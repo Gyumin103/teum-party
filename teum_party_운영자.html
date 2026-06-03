@@ -4,16 +4,28 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>틈파티 운영자 대시보드</title>
-<link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&family=Noto+Serif+KR:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;padding:1.5rem 1rem 3rem;}
 .wrap{max-width:960px;margin:0 auto;}
-.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid #fce4ec;}
+
+/* 헤더 */
+.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:2px solid #fce4ec;}
 .header h1{font-size:20px;font-weight:700;color:#1a1a1a;}
 .header h1 em{font-style:normal;color:#e91e8c;}
 .refresh-btn{padding:8px 18px;border-radius:999px;border:1.5px solid #e91e8c;background:#fff;color:#e91e8c;font-size:13px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;}
 .refresh-btn:hover{background:#fff0f8;}
+
+/* 탭 */
+.tabs{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:2px solid #fce4ec;}
+.tab{padding:10px 24px;font-size:14px;font-weight:500;color:#aaa;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s;font-family:'Gmarket Sans',sans-serif;}
+.tab:hover{color:#e91e8c;}
+.tab.active{color:#e91e8c;font-weight:700;border-bottom:2px solid #e91e8c;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* 통계 */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem;}
 .stat{background:#fff;border-radius:14px;padding:0.75rem 0.5rem;border:1px solid #fce4ec;text-align:center;}
 .stat-sub-row{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:4px;}
@@ -25,6 +37,8 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 .stat-num.pink{color:#e91e8c;}
 .stat-num.green{color:#2e7d32;}
 .stat-num.red{color:#c62828;}
+
+/* 필터 */
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center;}
 .filter-label{font-size:13px;color:#888;}
 .pill{font-size:12px;padding:6px 14px;border-radius:999px;border:1.5px solid #e0e0e0;background:#fff;color:#888;cursor:pointer;font-family:'Gmarket Sans',sans-serif;transition:all 0.15s;font-weight:500;}
@@ -40,7 +54,6 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 .card.approved{border-color:#a5d6a7;background:#f1f8e9;}
 .card.rejected{border-color:#ef9a9a;background:#fff5f5;opacity:0.75;}
 .card-body{padding:10px 12px 12px;}
-.card-status-row{display:flex;justify-content:flex-end;margin-bottom:5px;}
 .status-badge{font-size:10px;padding:2px 8px;border-radius:999px;font-weight:700;}
 .status-badge.검토중{background:#fff3e0;color:#e65100;border:1px solid #ffcc80;}
 .status-badge.승인{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
@@ -62,8 +75,7 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 .tag-f{background:#fce4ec;color:#993556;}
 .tag-mbti{background:#f3f0ff;color:#5b21b6;}
 .tag-hashtag{background:#e0f7fa;color:#00695c;}
-
-.loading{text-align:center;padding:3rem;color:#bbb;font-size:14px;}
+.loading{text-align:center;padding:3rem;color:#bbb;font-size:14px;grid-column:1/-1;}
 .empty{text-align:center;padding:2rem;color:#bbb;font-size:14px;}
 
 /* 모달 */
@@ -93,56 +105,203 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 .btn-reset{width:100%;height:40px;border-radius:12px;border:1.5px solid #e0e0e0;background:#fff;color:#888;font-size:13px;cursor:pointer;font-family:'Gmarket Sans',sans-serif;margin-top:8px;}
 .saving{text-align:center;font-size:12px;color:#e91e8c;margin-top:8px;display:none;}
 .saving.show{display:block;}
-@media(max-width:480px){.stats{grid-template-columns:repeat(3,1fr);}}
+
+/* ── 탭2: 명단 카드 ── */
+.card-editor{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.card-settings{flex:1;min-width:260px;}
+.card-settings h3{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:12px;}
+.inp-row{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;}
+.inp-label{font-size:12px;color:#666;font-weight:500;}
+.inp-field{height:40px;border:1.5px solid #e0e0e0;border-radius:10px;padding:0 12px;font-size:13px;font-family:'Gmarket Sans',sans-serif;color:#1a1a1a;outline:none;}
+.inp-field:focus{border-color:#e91e8c;}
+.auto-load-btn{width:100%;height:40px;border-radius:10px;border:1.5px solid #e91e8c;background:#fff0f8;color:#e91e8c;font-size:13px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;margin-bottom:10px;}
+.auto-load-btn:hover{background:#fce4ec;}
+.save-btn{width:100%;height:44px;border-radius:10px;border:none;background:#1a1a1a;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Gmarket Sans',sans-serif;}
+.save-btn:hover{opacity:0.85;}
+.page-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;}
+.page-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid #e0e0e0;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.page-btn:hover{border-color:#e91e8c;color:#e91e8c;}
+.page-info{font-size:13px;color:#666;}
+.card-preview{flex:1;min-width:300px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+
+/* 명단 카드 실제 디자인 */
+.insta-card{
+  width:480px;max-width:100%;
+  background:#0d0d0d;position:relative;overflow:hidden;
+}
+.insta-card::before{
+  content:'';position:absolute;inset:0;
+  border:1.5px solid transparent;
+  background:linear-gradient(#0d0d0d,#0d0d0d) padding-box,
+             linear-gradient(135deg,#c9a84c,#f0d080,#c9a84c,#8b6914) border-box;
+  pointer-events:none;z-index:10;
+}
+.ic-corner{position:absolute;width:20px;height:20px;z-index:11;}
+.ic-corner.tl{top:10px;left:10px;border-top:1.5px solid #c9a84c;border-left:1.5px solid #c9a84c;}
+.ic-corner.tr{top:10px;right:10px;border-top:1.5px solid #c9a84c;border-right:1.5px solid #c9a84c;}
+.ic-corner.bl{bottom:10px;left:10px;border-bottom:1.5px solid #c9a84c;border-left:1.5px solid #c9a84c;}
+.ic-corner.br{bottom:10px;right:10px;border-bottom:1.5px solid #c9a84c;border-right:1.5px solid #c9a84c;}
+.ic-inner{padding:24px 30px;position:relative;z-index:1;}
+.ic-brand{font-family:'Playfair Display',serif;font-size:10px;letter-spacing:0.3em;color:#c9a84c;text-transform:uppercase;text-align:center;margin-bottom:6px;}
+.ic-date{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:#f5f0e8;letter-spacing:0.05em;text-align:center;line-height:1.3;}
+.ic-divider{display:flex;align-items:center;gap:6px;margin:10px 0;}
+.ic-divider-line{flex:1;height:0.5px;background:linear-gradient(90deg,transparent,#c9a84c,transparent);}
+.ic-diamond{width:4px;height:4px;background:#c9a84c;transform:rotate(45deg);flex-shrink:0;}
+.ic-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.ic-col{padding:0 8px;}
+.ic-col:first-child{border-right:0.5px solid #2a2620;padding-left:0;}
+.ic-col:last-child{padding-right:0;}
+.ic-col-header{text-align:center;font-size:9px;font-weight:700;letter-spacing:0.25em;color:#c9a84c;margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid #2a2620;}
+.ic-person{text-align:center;font-size:10.5px;color:#d4cfc5;font-weight:300;padding:4px 8px;margin-bottom:4px;letter-spacing:0.03em;border:0.5px solid #2a2620;border-radius:999px;background:rgba(201,168,76,0.04);}
+.ic-footer{text-align:center;margin-top:8px;font-size:8px;color:#4a4540;letter-spacing:0.2em;text-transform:uppercase;}
+
+@media(max-width:480px){.stats{grid-template-columns:repeat(3,1fr);}.card-editor{flex-direction:column;}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="header">
     <h1>✨ 틈파티 <em>운영자</em> 대시보드</h1>
-    <button class="refresh-btn" onclick="loadData()">↻ 새로고침</button>
+    <button class="refresh-btn" id="main-refresh" onclick="loadData()">↻ 새로고침</button>
   </div>
-  <div class="stats">
-    <div class="stat">
-      <div class="stat-label">전체 지원자</div>
-      <div class="stat-num pink" id="cnt-total">-</div>
-      <div class="stat-sub-row">
-        <span class="stat-sub">남 <b id="cnt-m">-</b></span>
-        <span class="stat-divider">/</span>
-        <span class="stat-sub">여 <b id="cnt-f">-</b></span>
+
+  <!-- 탭 -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(0,this)">📋 신청자 관리</div>
+    <div class="tab" onclick="switchTab(1,this)">📣 홍보 명단 카드</div>
+  </div>
+
+  <!-- 탭1: 신청자 관리 -->
+  <div class="tab-content active" id="tab0">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">전체 지원자</div>
+        <div class="stat-num pink" id="cnt-total">-</div>
+        <div class="stat-sub-row">
+          <span class="stat-sub">남 <b id="cnt-m">-</b></span>
+          <span class="stat-divider">/</span>
+          <span class="stat-sub">여 <b id="cnt-f">-</b></span>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">검토중</div>
+        <div class="stat-num" style="color:#e65100;" id="cnt-review">-</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">승인</div>
+        <div class="stat-num green" id="cnt-approved-m">-</div>
+        <div class="stat-sub-row">
+          <span class="stat-sub">남 <b id="cnt-approved-m-sub">-</b></span>
+          <span class="stat-divider">/</span>
+          <span class="stat-sub">여 <b id="cnt-approved-f">-</b></span>
+        </div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">탈락</div>
+        <div class="stat-num red" id="cnt-rejected">-</div>
       </div>
     </div>
-    <div class="stat">
-      <div class="stat-label">검토중</div>
-      <div class="stat-num" style="color:#e65100;" id="cnt-review">-</div>
+    <div class="filters">
+      <span class="filter-label">성별</span>
+      <button class="pill active" onclick="setFilter('gender','전체',this)">전체</button>
+      <button class="pill" onclick="setFilter('gender','남성',this)">남성</button>
+      <button class="pill" onclick="setFilter('gender','여성',this)">여성</button>
+      <span class="filter-label" style="margin-left:8px;">상태</span>
+      <button class="pill active" onclick="setFilter('status','전체',this)">전체</button>
+      <button class="pill" onclick="setFilter('status','검토중',this)">검토중</button>
+      <button class="pill" onclick="setFilter('status','승인',this)">승인</button>
+      <button class="pill" onclick="setFilter('status','탈락',this)">탈락</button>
+      <input class="search-input" id="search" placeholder="이름·직업·MBTI 검색..." oninput="renderCards()"/>
     </div>
-    <div class="stat">
-      <div class="stat-label">승인</div>
-      <div class="stat-num green" id="cnt-approved-m">-</div>
-      <div class="stat-sub-row">
-        <span class="stat-sub">남 <b id="cnt-approved-m-sub">-</b></span>
-        <span class="stat-divider">/</span>
-        <span class="stat-sub">여 <b id="cnt-approved-f">-</b></span>
+    <div class="grid" id="grid"><div class="loading">데이터 불러오는 중... 🩷</div></div>
+  </div>
+
+  <!-- 탭2: 홍보 명단 카드 -->
+  <div class="tab-content" id="tab1">
+    <div class="card-editor">
+
+      <!-- 왼쪽: 설정 + 선택 -->
+      <div class="card-settings">
+        <h3>⚙️ 카드 설정</h3>
+        <div class="inp-row">
+          <span class="inp-label">날짜</span>
+          <input class="inp-field" id="card-date" value="5 / 31 (일) 15:00"/>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">브랜드 문구</span>
+          <input class="inp-field" id="card-brand" value="TEUM PARTY · 참가자 명단"/>
+        </div>
+        <div class="inp-row">
+          <span class="inp-label">인스타 계정</span>
+          <input class="inp-field" id="card-insta" value="@teum_party"/>
+        </div>
+
+        <div style="height:0.5px;background:#eee;margin:12px 0;"></div>
+        <h3 style="margin-bottom:10px;">👥 참가자 선택</h3>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#185FA5;margin-bottom:6px;letter-spacing:0.05em;">MAN</div>
+            <div id="select-men" style="display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto;"></div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#993556;margin-bottom:6px;letter-spacing:0.05em;">WOMAN</div>
+            <div id="select-women" style="display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto;"></div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#aaa;margin-bottom:12px;" id="select-count">선택: 남 0명 / 여 0명</div>
+
+        <div style="height:0.5px;background:#eee;margin:12px 0;"></div>
+        <h3 style="margin-bottom:10px;">✏️ 카드 직접 수정</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#185FA5;margin-bottom:4px;">MAN (7줄)</div>
+            <textarea id="edit-man" style="width:100%;height:150px;border:1.5px solid #e0e0e0;border-radius:8px;padding:6px 8px;font-size:11px;font-family:inherit;resize:none;line-height:1.8;outline:none;" oninput="renderCard()"></textarea>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#993556;margin-bottom:4px;">WOMAN (7줄)</div>
+            <textarea id="edit-woman" style="width:100%;height:150px;border:1.5px solid #e0e0e0;border-radius:8px;padding:6px 8px;font-size:11px;font-family:inherit;resize:none;line-height:1.8;outline:none;" oninput="renderCard()"></textarea>
+          </div>
+        </div>
+
+        <div class="page-nav">
+          <button class="page-btn" onclick="changePage(-1)">‹</button>
+          <span class="page-info" id="page-info">1 / 1 페이지</span>
+          <button class="page-btn" onclick="changePage(1)">›</button>
+        </div>
+        <div style="margin-top:12px;">
+          <button class="save-btn" onclick="saveCard()">📸 이미지 저장</button>
+        </div>
+      </div>
+
+      <!-- 오른쪽: 카드 미리보기 -->
+      <div class="card-preview">
+        <div class="insta-card" id="insta-card">
+          <div class="ic-corner tl"></div>
+          <div class="ic-corner tr"></div>
+          <div class="ic-corner bl"></div>
+          <div class="ic-corner br"></div>
+          <div class="ic-inner">
+            <div class="ic-brand" id="ic-brand">TEUM PARTY · 참가자 명단</div>
+            <div class="ic-date" id="ic-date">5 / 31 (일) 15:00</div>
+            <div class="ic-divider"><div class="ic-divider-line"></div><div class="ic-diamond"></div><div class="ic-divider-line"></div></div>
+            <div class="ic-cols">
+              <div class="ic-col">
+                <div class="ic-col-header">MAN</div>
+                <div id="ic-man"></div>
+              </div>
+              <div class="ic-col">
+                <div class="ic-col-header">WOMAN</div>
+                <div id="ic-woman"></div>
+              </div>
+            </div>
+            <div class="ic-divider"><div class="ic-divider-line"></div><div class="ic-diamond"></div><div class="ic-divider-line"></div></div>
+            <div class="ic-footer" id="ic-footer">@teum_party</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="stat">
-      <div class="stat-label">탈락</div>
-      <div class="stat-num red" id="cnt-rejected">-</div>
-    </div>
   </div>
-  <div class="filters">
-    <span class="filter-label">성별</span>
-    <button class="pill active" onclick="setFilter('gender','전체',this)">전체</button>
-    <button class="pill" onclick="setFilter('gender','남성',this)">남성</button>
-    <button class="pill" onclick="setFilter('gender','여성',this)">여성</button>
-    <span class="filter-label" style="margin-left:8px;">상태</span>
-    <button class="pill active" onclick="setFilter('status','전체',this)">전체</button>
-    <button class="pill" onclick="setFilter('status','검토중',this)">검토중</button>
-    <button class="pill" onclick="setFilter('status','승인',this)">승인</button>
-    <button class="pill" onclick="setFilter('status','탈락',this)">탈락</button>
-    <input class="search-input" id="search" placeholder="이름·직업·MBTI 검색..." oninput="renderCards()"/>
-  </div>
-  <div class="grid" id="grid"><div class="loading">데이터 불러오는 중... 🩷</div></div>
 </div>
 
 <div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
@@ -152,6 +311,7 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbw0ACr7xUO7UdraMIj-M7eRD3lt3UrGvVmYndNzT2xNg1qKVq-LJ-FUuut57i6S92ZBwg/exec';
 const avatarColors=[
@@ -161,12 +321,25 @@ const avatarColors=[
 ];
 let allData=[], filters={gender:'전체',status:'전체'};
 let currentModalId=null;
+const PER_PAGE=7;
+let cardPage=0;
+let cardMen=[], cardWomen=[];
 
+// 탭 전환
+function switchTab(idx,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab'+idx).classList.add('active');
+  document.getElementById('main-refresh').style.display=idx===0?'':'none';
+}
+
+// 데이터 로드
 function loadData(){
   document.getElementById('grid').innerHTML='<div class="loading">데이터 불러오는 중... 🩷</div>';
   fetch(SCRIPT_URL)
     .then(r=>r.json())
-    .then(data=>{allData=data;updateStats();renderCards();})
+    .then(data=>{allData=data;updateStats();renderCards();buildSelectLists();})
     .catch(()=>{document.getElementById('grid').innerHTML='<div class="empty">데이터를 불러오지 못했어요 😢</div>';});
 }
 
@@ -185,14 +358,6 @@ function updateStats(){
   document.getElementById('cnt-approved-m-sub').textContent=mApp;
   document.getElementById('cnt-approved-f').textContent=fApp;
   document.getElementById('cnt-rejected').textContent=allData.filter(d=>d['상태']==='탈락').length;
-  const todayCnt=allData.filter(p=>{
-    const s=String(p['신청일시']||'');
-    const dt=new Date(s);
-    if(!isNaN(dt))return dt.getFullYear()===y&&dt.getMonth()+1===m&&dt.getDate()===d;
-    return s.includes(y+'')&&s.includes(m+'월')&&s.includes(d+'일');
-  }).length;
-  const el=document.getElementById('cnt-today');
-  if(el)el.textContent=todayCnt;
 }
 
 function setFilter(key,val,el){
@@ -300,7 +465,132 @@ function updateStatus(status){
 }
 
 function closeModal(e){if(e.target===document.getElementById('modal-bg'))document.getElementById('modal-bg').classList.remove('open');}
+
+// ── 명단 카드 ──
+let selectedMen=[], selectedWomen=[];
+let cardPages=[]; // [{men:[...], women:[...]}]
+let cardPage=0;
+
+function buildSelectLists(){
+  const approved=allData.filter(d=>d['상태']==='승인');
+  const men=approved.filter(d=>d['성별']==='남성');
+  const women=approved.filter(d=>d['성별']==='여성');
+
+  const renderSel=(list,el,gender)=>{
+    el.innerHTML='';
+    if(!list.length){el.innerHTML='<div style="font-size:11px;color:#bbb;">승인된 '+gender+' 없음</div>';return;}
+    list.forEach((d,i)=>{
+      const yr=d['연도']?d['연도'].replace('년생',''):'?';
+      const ht=d['키']?d['키'].replace('cm','')+'cm':'?';
+      const label=yr+' / '+ht+' / '+(d['직업']||'?');
+      const row=document.createElement('label');
+      row.style.cssText='display:flex;align-items:center;gap:6px;font-size:11px;color:#333;cursor:pointer;padding:3px 6px;border-radius:6px;border:1px solid #eee;background:#fff;';
+      row.innerHTML=`<input type="checkbox" data-idx="${i}" data-gender="${gender}" style="accent-color:#e91e8c;cursor:pointer;"/>${label}`;
+      row.querySelector('input').addEventListener('change',onSelectChange);
+      el.appendChild(row);
+    });
+  };
+
+  renderSel(men,document.getElementById('select-men'),'남');
+  renderSel(women,document.getElementById('select-women'),'여');
+  selectedMen=[]; selectedWomen=[];
+  updateSelectCount();
+}
+
+function onSelectChange(){
+  const approved=allData.filter(d=>d['상태']==='승인');
+  const men=approved.filter(d=>d['성별']==='남성');
+  const women=approved.filter(d=>d['성별']==='여성');
+
+  selectedMen=[];selectedWomen=[];
+  document.querySelectorAll('#select-men input:checked').forEach(cb=>{
+    selectedMen.push(men[parseInt(cb.dataset.idx)]);
+  });
+  document.querySelectorAll('#select-women input:checked').forEach(cb=>{
+    selectedWomen.push(women[parseInt(cb.dataset.idx)]);
+  });
+  updateSelectCount();
+  syncTextareas();
+  renderCard();
+}
+
+function updateSelectCount(){
+  document.getElementById('select-count').textContent='선택: 남 '+selectedMen.length+'명 / 여 '+selectedWomen.length+'명';
+}
+
+function syncTextareas(){
+  const fmt=d=>{
+    const yr=d['연도']?d['연도'].replace('년생',''):'?';
+    const ht=d['키']?d['키'].replace('cm','')+'':' ';
+    return yr+' / '+ht+' / '+(d['직업']||'?');
+  };
+  // 7줄 고정
+  const pad=(arr)=>{
+    const lines=arr.map(fmt);
+    while(lines.length<PER_PAGE)lines.push('');
+    return lines.slice(0,PER_PAGE).join('
+');
+  };
+  document.getElementById('edit-man').value=pad(selectedMen);
+  document.getElementById('edit-woman').value=pad(selectedWomen);
+}
+
+function changePage(dir){
+  const totalPages=Math.max(Math.ceil(selectedMen.length/PER_PAGE),Math.ceil(selectedWomen.length/PER_PAGE),1);
+  cardPage=Math.max(0,Math.min(cardPage+dir,totalPages-1));
+  renderCard();
+}
+
+function renderCard(){
+  document.getElementById('ic-date').textContent=document.getElementById('card-date').value;
+  document.getElementById('ic-brand').textContent=document.getElementById('card-brand').value;
+  document.getElementById('ic-footer').textContent=document.getElementById('card-insta').value;
+
+  // 텍스트영역에서 직접 읽기
+  const manLines=document.getElementById('edit-man').value.split('
+');
+  const womanLines=document.getElementById('edit-woman').value.split('
+');
+
+  const renderLines=(lines,el)=>{
+    el.innerHTML='';
+    for(let i=0;i<PER_PAGE;i++){
+      const div=document.createElement('div');
+      div.className='ic-person';
+      const txt=(lines[i]||'').trim();
+      if(txt){div.textContent=txt;}
+      else{div.textContent=' ';div.style.opacity='0';}
+      el.appendChild(div);
+    }
+  };
+
+  renderLines(manLines,document.getElementById('ic-man'));
+  renderLines(womanLines,document.getElementById('ic-woman'));
+
+  const totalPages=Math.max(Math.ceil(selectedMen.length/PER_PAGE),Math.ceil(selectedWomen.length/PER_PAGE),1);
+  document.getElementById('page-info').textContent=(cardPage+1)+' / '+totalPages+' 페이지';
+}
+
+function saveCard(){
+  renderCard();
+  setTimeout(()=>{
+    html2canvas(document.getElementById('insta-card'),{
+      scale:3,backgroundColor:'#0d0d0d',useCORS:true,logging:false
+    }).then(canvas=>{
+      const link=document.createElement('a');
+      link.download='틈파티_명단_'+(cardPage+1)+'페이지.png';
+      link.href=canvas.toDataURL('image/png');
+      link.click();
+    });
+  },150);
+}
+
+document.getElementById('card-date').addEventListener('input',renderCard);
+document.getElementById('card-brand').addEventListener('input',renderCard);
+document.getElementById('card-insta').addEventListener('input',renderCard);
+
 loadData();
+renderCard();
 </script>
 </body>
 </html>
