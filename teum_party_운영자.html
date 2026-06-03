@@ -490,10 +490,8 @@ function renderRecruitment(){
   const wrap=document.getElementById('recruit-wrap');
   if(!wrap)return;
   const today=new Date();today.setHours(0,0,0,0);
-  const upcoming=[...partyDates].filter(d=>{const dt=parseDate(d);return dt&&dt>=today;})
-    .sort((a,b)=>parseDate(a)-parseDate(b));
+  const upcoming=[...partyDates].filter(d=>{const dt=parseDate(d);return dt&&dt>=today;}).sort((a,b)=>parseDate(a)-parseDate(b));
   const all=[...upcoming];
-  // 모객 있는 날짜 중 upcoming 아닌 것도 포함
   recruitmentData.forEach(r=>{if(r['파티날짜']&&!all.includes(r['파티날짜']))all.push(r['파티날짜']);});
   if(!all.length){wrap.innerHTML='<div style="text-align:center;padding:3rem;color:#bbb;font-size:14px;">등록된 파티 날짜가 없어요</div>';return;}
   wrap.innerHTML='';
@@ -501,71 +499,77 @@ function renderRecruitment(){
     const members=recruitmentData.filter(r=>r['파티날짜']===date);
     const total=members.length;
     const totalAmt=members.reduce((s,r)=>s+parseInt(r['금액']||0),0);
+    const safeId=date.replace(/[^a-zA-Z0-9]/g,'_');
+
     const sec=document.createElement('div');sec.className='r-section';
-    sec.innerHTML=`
-      <div class="r-header">
-        <div class="r-title">📅 ${date}</div>
-        <div class="r-stats">
-          <span style="color:#888;">총 <b style="color:#1a1a1a;">${total}명</b></span>
-          <span style="color:#888;">매출 <b style="color:#e91e8c;">${totalAmt.toLocaleString()}원</b></span>
-        </div>
-      </div>
-      <div class="r-body">
-        <div class="r-add">
-          <div><div style="font-size:11px;color:#888;margin-bottom:4px;">담당자</div>
-            <select class="r-select" id="rm-${date}">
-              <option value="김수민">김수민</option>
-              <option value="주태빈">주태빈</option>
-            </select></div>
-          <div><div style="font-size:11px;color:#888;margin-bottom:4px;">이름</div>
-            <input class="r-input" id="rn-${date}" placeholder="이름"/></div>
-          <div><div style="font-size:11px;color:#888;margin-bottom:4px;">플랫폼</div>
-            <select class="r-select" id="rp-${date}">
-              <option value="문토">문토</option>
-              <option value="인스타">인스타</option>
-              <option value="기타">기타</option>
-            </select></div>
-          <div><div style="font-size:11px;color:#888;margin-bottom:4px;">부</div>
-            <select class="r-select" id="rs-${date}">
-              <option value="1부">1부</option>
-              <option value="2부">2부</option>
-              <option value="1+2부">1+2부</option>
-            </select></div>
-          <div><div style="font-size:11px;color:#888;margin-bottom:4px;">가격</div>
-            <select class="r-select" id="rpr-${date}" onchange="toggleAmount('${date}')">
-              <option value="무료">무료</option>
-              <option value="할인가">할인가</option>
-              <option value="정상가">정상가</option>
-            </select></div>
-          <div id="ramt-wrap-${date}" style="display:none;"><div style="font-size:11px;color:#888;margin-bottom:4px;">금액</div>
-            <select class="r-select amount-input" id="ramt-${date}">
-              <option value="5000">5,000</option>
-              <option value="10000">10,000</option>
-              <option value="15000">15,000</option>
-              <option value="20000">20,000</option>
-              <option value="25000">25,000</option>
-              <option value="30000">30,000</option>
-            </select></div>
-          <div style="padding-top:20px;">
-            <button class="r-add-btn" onclick="addRecruitment('${date}')">+ 추가</button>
-          </div>
-        </div>
-        ${members.length?`<table class="r-table">
-          <tr><th>담당자</th><th>이름</th><th>플랫폼</th><th>부</th><th>가격</th><th></th></tr>
-          ${members.map(r=>{
-            const pc=r['가격']==='무료'?'price-free':r['가격']==='할인가'?'price-discount':'price-normal';
-            const priceLabel=r['가격']==='무료'?'무료':r['가격']+' '+parseInt(r['금액']||0).toLocaleString()+'원';
-            return '<tr>'
-              +'<td>'+r['담당자']+'</td>'
-              +'<td style="font-weight:500;">'+r['이름']+'</td>'
-              +'<td><span class="platform-tag">'+r['플랫폼']+'</span></td>'
-              +'<td><span class="session-tag">'+r['부']+'</span></td>'
-              +'<td><span class="price-tag '+pc+'">'+priceLabel+'</span></td>'
-              +'<td><button class="del-btn" onclick="deleteRecruitment(''+r['ID']+'')">×</button></td>'
-              +'</tr>';
-          }).join('')}
-        </table>`:'<div class="r-empty">아직 등록된 인원이 없어요</div>'}
-      </div>`;
+
+    // 헤더
+    const hdr=document.createElement('div');hdr.className='r-header';
+    hdr.innerHTML='<div class="r-title">📅 '+date+'</div>'
+      +'<div class="r-stats"><span style="color:#888;">총 <b style="color:#1a1a1a;">'+total+'명</b></span>'
+      +'<span style="color:#888;">매출 <b style="color:#e91e8c;">'+totalAmt.toLocaleString()+'원</b></span></div>';
+    sec.appendChild(hdr);
+
+    // 바디
+    const body=document.createElement('div');body.className='r-body';
+
+    // 추가 폼
+    const addRow=document.createElement('div');addRow.className='r-add';
+    addRow.innerHTML=
+      '<div><div style="font-size:11px;color:#888;margin-bottom:4px;">담당자</div>'
+      +'<select class="r-select" id="rm-'+safeId+'"><option value="김수민">김수민</option><option value="주태빈">주태빈</option></select></div>'
+      +'<div><div style="font-size:11px;color:#888;margin-bottom:4px;">이름</div>'
+      +'<input class="r-input" id="rn-'+safeId+'" placeholder="이름"/></div>'
+      +'<div><div style="font-size:11px;color:#888;margin-bottom:4px;">플랫폼</div>'
+      +'<select class="r-select" id="rp-'+safeId+'"><option value="문토">문토</option><option value="인스타">인스타</option><option value="기타">기타</option></select></div>'
+      +'<div><div style="font-size:11px;color:#888;margin-bottom:4px;">부</div>'
+      +'<select class="r-select" id="rs-'+safeId+'"><option value="1부">1부</option><option value="2부">2부</option><option value="1+2부">1+2부</option></select></div>'
+      +'<div><div style="font-size:11px;color:#888;margin-bottom:4px;">가격</div>'
+      +'<select class="r-select" id="rpr-'+safeId+'"></select></div>'
+      +'<div id="ramt-wrap-'+safeId+'" style="display:none;"><div style="font-size:11px;color:#888;margin-bottom:4px;">금액</div>'
+      +'<select class="r-select" id="ramt-'+safeId+'">'
+      +'<option value="5000">5,000</option><option value="10000">10,000</option><option value="15000">15,000</option>'
+      +'<option value="20000">20,000</option><option value="25000">25,000</option><option value="30000">30,000</option>'
+      +'</select></div>'
+      +'<div style="padding-top:20px;"><button class="r-add-btn" id="rbtn-'+safeId+'">+ 추가</button></div>';
+    body.appendChild(addRow);
+
+    // 가격 select 옵션 및 이벤트
+    const prSel=body.querySelector('#rpr-'+safeId);
+    ['무료','할인가','정상가'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;prSel.appendChild(o);});
+    prSel.addEventListener('change',()=>{
+      const amtWrap=document.getElementById('ramt-wrap-'+safeId);
+      if(amtWrap)amtWrap.style.display=prSel.value==='무료'?'none':'block';
+    });
+
+    // 추가 버튼 이벤트
+    const addBtn=body.querySelector('#rbtn-'+safeId);
+    addBtn.addEventListener('click',()=>addRecruitment(date,safeId));
+
+    // 테이블
+    if(members.length){
+      const tbl=document.createElement('table');tbl.className='r-table';
+      tbl.innerHTML='<tr><th>담당자</th><th>이름</th><th>플랫폼</th><th>부</th><th>가격</th><th></th></tr>';
+      members.forEach(r=>{
+        const pc=r['가격']==='무료'?'price-free':r['가격']==='할인가'?'price-discount':'price-normal';
+        const priceLabel=r['가격']==='무료'?'무료':r['가격']+' '+parseInt(r['금액']||0).toLocaleString()+'원';
+        const tr=document.createElement('tr');
+        tr.innerHTML='<td>'+r['담당자']+'</td>'
+          +'<td style="font-weight:500;">'+r['이름']+'</td>'
+          +'<td><span class="platform-tag">'+r['플랫폼']+'</span></td>'
+          +'<td><span class="session-tag">'+r['부']+'</span></td>'
+          +'<td><span class="price-tag '+pc+'">'+priceLabel+'</span></td>'
+          +'<td><button class="del-btn">×</button></td>';
+        const delBtn=tr.querySelector('.del-btn');
+        delBtn.addEventListener('click',()=>deleteRecruitment(String(r['ID'])));
+        tbl.appendChild(tr);
+      });
+      body.appendChild(tbl);
+    } else {
+      const empty=document.createElement('div');empty.className='r-empty';empty.textContent='아직 등록된 인원이 없어요';
+      body.appendChild(empty);
+    }
+    sec.appendChild(body);
     wrap.appendChild(sec);
   });
 }
@@ -576,13 +580,14 @@ function toggleAmount(date){
   if(wrap)wrap.style.display=pr==='무료'?'none':'block';
 }
 
-function addRecruitment(date){
-  const manager=document.getElementById('rm-'+date).value;
-  const name=document.getElementById('rn-'+date).value.trim();
-  const platform=document.getElementById('rp-'+date).value;
-  const session=document.getElementById('rs-'+date).value;
-  const priceType=document.getElementById('rpr-'+date).value;
-  const amount=priceType==='무료'?0:parseInt(document.getElementById('ramt-'+date)?.value||0);
+function addRecruitment(date,safeId){
+  const sid=safeId||date.replace(/[^a-zA-Z0-9]/g,'_');
+  const manager=document.getElementById('rm-'+sid).value;
+  const name=document.getElementById('rn-'+sid).value.trim();
+  const platform=document.getElementById('rp-'+sid).value;
+  const session=document.getElementById('rs-'+sid).value;
+  const priceType=document.getElementById('rpr-'+sid).value;
+  const amount=priceType==='무료'?0:parseInt(document.getElementById('ramt-'+sid)?.value||0);
   if(!name){alert('이름을 입력해 주세요');return;}
   const rid='R'+Date.now();
   const payload={action:'addRecruitment',rid,partyDate:date,manager,name,platform,session,priceType,amount};
