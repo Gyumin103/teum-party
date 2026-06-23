@@ -230,7 +230,7 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
         <button class="pill active" onclick="setDateFilter('전체',this)">전체</button>
       </div>
     </div>
-    <div id="date-manage-tags" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;"></div>
+
     <div class="grid" id="grid"><div class="loading">데이터 불러오는 중... 🩷</div></div>
   </div>
 
@@ -294,6 +294,10 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 
   <!-- 탭3: 지난 파티 -->
   <div class="tab-content" id="tab2">
+    <div style="background:#fff;border:1px solid #fce4ec;border-radius:14px;padding:1rem 1.25rem;margin-bottom:1.25rem;">
+      <div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:10px;">📅 등록된 날짜 관리</div>
+      <div id="date-manage-tags" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+    </div>
     <div id="past-list"></div>
   </div>
 </div>
@@ -334,7 +338,7 @@ function loadData(){
     allData=Array.isArray(res)?res:(res.data||[]);
     partyDates=Array.isArray(res)?[]:(res.dates||[]);
     recruitmentData=Array.isArray(res)?[]:(res.recruitment||[]);
-    updateStats(allData);renderCards();buildSelectLists();renderDatePills();renderDateManageTags();
+    updateStats(allData);renderCards();buildSelectLists();renderDatePills();
   }).catch(()=>{document.getElementById('grid').innerHTML='<div class="empty">데이터를 불러오지 못했어요 😢</div>';});
 }
 
@@ -681,6 +685,7 @@ function renderRecruitDate(date){
 
 
 function renderPastParties(){
+  renderDateManageTags();
   const today=new Date();today.setHours(0,0,0,0);
   const past=partyDates.filter(d=>{const dt=parseDate(d);return dt&&dt<today;}).sort((a,b)=>parseDate(b)-parseDate(a));
   const el=document.getElementById('past-list');
