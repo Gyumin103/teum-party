@@ -168,7 +168,7 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
     <div class="header-right">
       <button class="hbtn pink" onclick="loadData()">↻ 새로고침</button>
       <div class="date-add-wrap" id="date-add-area">
-        <input class="date-add-input" id="new-date-input" placeholder="2026 6/14 (일)" />
+        <input type="date" class="date-add-input" id="new-date-input" style="width:150px;cursor:pointer;"/>
         <button class="date-add-btn" onclick="addPartyDate()">+ 날짜 추가</button>
       </div>
     </div>
@@ -230,6 +230,7 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
         <button class="pill active" onclick="setDateFilter('전체',this)">전체</button>
       </div>
     </div>
+    <div id="date-manage-tags" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;"></div>
     <div class="grid" id="grid"><div class="loading">데이터 불러오는 중... 🩷</div></div>
   </div>
 
@@ -333,7 +334,7 @@ function loadData(){
     allData=Array.isArray(res)?res:(res.data||[]);
     partyDates=Array.isArray(res)?[]:(res.dates||[]);
     recruitmentData=Array.isArray(res)?[]:(res.recruitment||[]);
-    updateStats(allData);renderCards();buildSelectLists();renderDatePills();
+    updateStats(allData);renderCards();buildSelectLists();renderDatePills();renderDateManageTags();
   }).catch(()=>{document.getElementById('grid').innerHTML='<div class="empty">데이터를 불러오지 못했어요 😢</div>';});
 }
 
@@ -481,14 +482,49 @@ function deleteOne(id){
 function closeModal(e){if(e.target===document.getElementById('modal-bg'))document.getElementById('modal-bg').classList.remove('open');}
 
 // 날짜 관리
+function formatPartyDate(dateStr){
+  // '2026-06-14' → '2026 6/14 (일)'
+  if(!dateStr)return '';
+  const d=new Date(dateStr+'T00:00:00');
+  const days=['일','월','화','수','목','금','토'];
+  const y=d.getFullYear();
+  const m=d.getMonth()+1;
+  const day=d.getDate();
+  const dow=days[d.getDay()];
+  return y+' '+m+'/'+day+' ('+dow+')';
+}
+
 function addPartyDate(){
-  const val=document.getElementById('new-date-input').value.trim();
-  if(!val)return;
+  const raw=document.getElementById('new-date-input').value;
+  if(!raw){alert('날짜를 선택해 주세요');return;}
+  const val=formatPartyDate(raw);
   if(partyDates.includes(val)){alert('이미 있는 날짜예요');return;}
   partyDates.push(val);
   fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateDates',dates:partyDates})});
   document.getElementById('new-date-input').value='';
   renderDatePills();
+  renderDateManageTags();
+}
+
+function removePartyDate(val){
+  if(!confirm(val+' 날짜를 삭제할까요?'))return;
+  partyDates=partyDates.filter(d=>d!==val);
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateDates',dates:partyDates})});
+  renderDatePills();
+  renderDateManageTags();
+}
+
+function renderDateManageTags(){
+  const el=document.getElementById('date-manage-tags');
+  if(!el)return;
+  if(!partyDates.length){el.innerHTML='';return;}
+  el.innerHTML='<span style="font-size:11px;color:#aaa;align-self:center;">등록된 날짜:</span>';
+  partyDates.forEach(d=>{
+    const tag=document.createElement('div');
+    tag.style.cssText='display:flex;align-items:center;gap:4px;background:#fff0f8;border:1px solid #f8bbd0;border-radius:999px;padding:3px 10px;font-size:12px;color:#c2185b;';
+    tag.innerHTML=d+'<button onclick="removePartyDate(''+d+'')" style="background:none;border:none;color:#f48fb1;cursor:pointer;font-size:14px;line-height:1;margin-left:2px;padding:0;">×</button>';
+    el.appendChild(tag);
+  });
 }
 
 // 지난 파티
@@ -664,18 +700,23 @@ function renderPastParties(){
       </div>`;
     const body=document.createElement('div');
     body.style.cssText='display:none;padding:14px 18px;border-top:0.5px solid #fce4ec;';
-    if(!members.length){body.innerHTML='<div style="font-size:13px;color:#bbb;">해당 날짜 신청자 없음</div>';}
+    if(!members.length){const em=document.createElement('div');em.style.cssText='font-size:13px;color:#bbb;';em.textContent='해당 날짜 신청자 없음';body.appendChild(em);}
     else{body.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;">'+members.map(d=>{
       const im=d['성별']==='남성';
       const s=d['상태']||'검토중';
       const sc=s==='승인'?'#2e7d32':s==='탈락'?'#c62828':'#e65100';
       const sb=s==='승인'?'#e8f5e9':s==='탈락'?'#ffebee':'#fff3e0';
-      return '<div style="background:#fafafa;border-radius:10px;padding:8px 10px;border:1px solid #eee;font-size:12px;">'
-        +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">'
+      const div=document.createElement('div');
+      div.style.cssText='background:#fafafa;border-radius:10px;padding:8px 10px;border:1px solid #eee;font-size:12px;cursor:pointer;transition:all 0.15s;';
+      div.onmouseenter=()=>div.style.borderColor='#e91e8c';
+      div.onmouseleave=()=>div.style.borderColor='#eee';
+      div.innerHTML='<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">'
         +'<span style="width:24px;height:24px;border-radius:50%;background:'+(im?'#E6F1FB':'#fce4ec')+';color:'+(im?'#185FA5':'#993556')+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">'+(im?'남':'여')+'</span>'
         +'<span style="font-weight:700;color:#1a1a1a;">'+d['이름']+'</span>'
         +'<span style="margin-left:auto;font-size:10px;padding:1px 7px;border-radius:999px;background:'+sb+';color:'+sc+';">'+s+'</span>'
-        +'</div><div style="color:#888;">'+d['나이']+' · '+d['키']+' · '+d['직업']+'</div></div>';
+        +'</div><div style="color:#888;">'+d['나이']+' · '+d['키']+' · '+d['직업']+'</div>';
+      div.onclick=()=>openModal(d,AC[0]);
+      return div;
     }).join('')+'</div>';}
     hdr.onclick=()=>{const o=body.style.display!=='none';body.style.display=o?'none':'block';hdr.querySelector('.arr').textContent=o?'▼':'▲';};
     sec.appendChild(hdr);sec.appendChild(body);el.appendChild(sec);
