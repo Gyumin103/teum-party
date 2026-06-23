@@ -294,9 +294,13 @@ body{background:#fff9fb;font-family:'Gmarket Sans',sans-serif;min-height:100vh;p
 
   <!-- 탭3: 지난 파티 -->
   <div class="tab-content" id="tab2">
-    <div style="background:#fff;border:1px solid #fce4ec;border-radius:14px;padding:1rem 1.25rem;margin-bottom:1.25rem;">
-      <div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:10px;">📅 등록된 날짜 관리</div>
-      <div id="date-manage-tags" style="display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;"></div>
+    <div style="margin-bottom:1.25rem;">
+      <div id="date-manage-toggle" onclick="toggleDateManage()" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;border:1.5px solid #e0e0e0;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:#666;user-select:none;">
+        <span>📅 날짜 관리</span><span id="date-manage-arrow" style="font-size:11px;color:#bbb;">▼</span>
+      </div>
+      <div id="date-manage-panel" style="display:none;margin-top:8px;background:#fff;border:1px solid #fce4ec;border-radius:12px;padding:12px 14px;max-height:160px;overflow-y:auto;">
+        <div id="date-manage-tags" style="display:flex;flex-direction:column;gap:4px;"></div>
+      </div>
     </div>
     <div id="past-list"></div>
   </div>
@@ -523,16 +527,32 @@ function renderDateManageTags(){
   if(!el)return;
   if(!partyDates.length){el.innerHTML='';return;}
   el.innerHTML='<span style="font-size:11px;color:#aaa;align-self:center;">등록된 날짜:</span>';
-  partyDates.forEach(d=>{
-    const tag=document.createElement('div');
-    tag.style.cssText='display:flex;align-items:center;gap:4px;background:#fff0f8;border:1px solid #f8bbd0;border-radius:999px;padding:3px 10px;font-size:12px;color:#c2185b;';
-    const span=document.createElement('span');span.textContent=d;
+  const today=new Date();today.setHours(0,0,0,0);
+  [...partyDates].sort((a,b)=>{
+    const da=parseDate(a),db=parseDate(b);
+    return (da||0)-(db||0);
+  }).forEach(d=>{
+    const isPast=parseDate(d)&&parseDate(d)<today;
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:8px;font-size:13px;'+(isPast?'color:#bbb;':'color:#1a1a1a;');
+    row.onmouseenter=()=>row.style.background='#fafafa';
+    row.onmouseleave=()=>row.style.background='transparent';
+    const left=document.createElement('div');
+    left.style.cssText='display:flex;align-items:center;gap:6px;';
+    const dot=document.createElement('span');
+    dot.textContent=isPast?'⏰':'📅';
+    dot.style.fontSize='12px';
+    const label=document.createElement('span');
+    label.textContent=d+(isPast?' (지남)':'');
+    left.appendChild(dot);left.appendChild(label);
     const btn=document.createElement('button');
-    btn.textContent='×';
-    btn.style.cssText='background:none;border:none;color:#f48fb1;cursor:pointer;font-size:14px;line-height:1;margin-left:4px;padding:0;';
+    btn.textContent='삭제';
+    btn.style.cssText='background:none;border:1px solid #eee;border-radius:6px;color:#bbb;cursor:pointer;font-size:11px;padding:2px 8px;';
+    btn.onmouseenter=()=>{btn.style.borderColor='#ef9a9a';btn.style.color='#c62828';};
+    btn.onmouseleave=()=>{btn.style.borderColor='#eee';btn.style.color='#bbb';};
     btn.addEventListener('click',()=>removePartyDate(d));
-    tag.appendChild(span);tag.appendChild(btn);
-    el.appendChild(tag);
+    row.appendChild(left);row.appendChild(btn);
+    el.appendChild(row);
   });
 }
 
@@ -683,6 +703,14 @@ function renderRecruitDate(date){
 
 
 
+
+function toggleDateManage(){
+  const panel=document.getElementById('date-manage-panel');
+  const arrow=document.getElementById('date-manage-arrow');
+  const isOpen=panel.style.display!=='none';
+  panel.style.display=isOpen?'none':'block';
+  arrow.textContent=isOpen?'▼':'▲';
+}
 
 function renderPastParties(){
   renderDateManageTags();
