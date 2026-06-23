@@ -3,6 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta property="og:title" content="✨ 2026 외모승인 틈파티 신청"/>
+<meta property="og:description" content="외모로 승인받는 그 설레는 틈 💗 지금 바로 신청해보세요!"/>
+<meta property="og:image" content="https://gyumin103.github.io/teum-party/og_image.png"/>
+<meta property="og:url" content="https://gyumin103.github.io/teum-party/teum_party_신청자.html"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="✨ 2026 외모승인 틈파티 신청"/>
+<meta name="twitter:description" content="외모로 승인받는 그 설레는 틈 💗 지금 바로 신청해보세요!"/>
+<meta name="twitter:image" content="https://gyumin103.github.io/teum-party/og_image.png"/>
 <title>2026 외모승인 틈파티 신청서</title>
 <link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&display=swap" rel="stylesheet"/>
 <style>
@@ -198,16 +207,26 @@ const mbtiList=['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','
   for(let h=150;h<=190;h++){const o=document.createElement('option');o.value=h;o.textContent=h+'cm';hSel.appendChild(o);}
 })();
 
-// 파티 날짜 목록 불러오기
+// 파티 날짜 목록 불러오기 (지난 날짜 제외)
+function parsePartyDate(str){
+  const m=String(str).match(/(\d{4})\s+(\d{1,2})\/(\d{1,2})/);
+  if(!m)return null;
+  return new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3]));
+}
 fetch(SCRIPT_URL).then(r=>r.json()).then(res=>{
   const dates=(res.dates||[]);
+  const today=new Date();today.setHours(0,0,0,0);
+  const upcoming=dates.filter(d=>{
+    const dt=parsePartyDate(d);
+    return dt&&dt>=today;
+  }).sort((a,b)=>parsePartyDate(a)-parsePartyDate(b));
   const sel=document.getElementById('party-date');
-  if(dates.length===0){
+  if(upcoming.length===0){
     const o=document.createElement('option');
-    o.value='미정';o.textContent='날짜 미정';
+    o.value='미정';o.textContent='현재 예정된 파티가 없어요';
     sel.appendChild(o);
   } else {
-    dates.forEach(d=>{
+    upcoming.forEach(d=>{
       const o=document.createElement('option');
       o.value=d;o.textContent=d;
       sel.appendChild(o);
